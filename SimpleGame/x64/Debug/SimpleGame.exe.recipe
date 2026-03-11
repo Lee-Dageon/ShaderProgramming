@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\ShaderProgramming\x64\Debug\SimpleGame.exe</FullPath>
+      <FullPath>C:\ShaderProgramming\ShaderProgramming03\x64\Debug\SimpleGame.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

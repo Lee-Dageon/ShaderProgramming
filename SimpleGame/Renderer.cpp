@@ -19,6 +19,7 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 
 	//Load shaders
 	m_SolidRectShader = CompileShaders("./Shaders/SolidRect.vs", "./Shaders/SolidRect.fs");
+	m_TriangleShader = CompileShaders("./Shaders/triangle.vs", "./Shaders/triangle.fs");
 	
 	//Create VBOs
 	CreateVertexBufferObjects();
@@ -46,6 +47,19 @@ void Renderer::CreateVertexBufferObjects()
 	glGenBuffers(1, &m_VBORect);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBORect);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);
+
+	float triangle[]
+		=
+	{
+		0, 0, 0,	//v0
+		1, 0, 0,	//v1
+		1, 1, 0		//v2
+	};
+	glGenBuffers(1, &m_TriangleVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_TriangleVBO);
+
+	//GPU 메모리에 올림
+	glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
 }
 
 void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType)
@@ -153,7 +167,7 @@ GLuint Renderer::CompileShaders(char* filenameVS, char* filenameFS)
 	}
 
 	glUseProgram(ShaderProgram);
-	std::cout << filenameVS << ", " << filenameFS << " Shader compiling is done.";
+	std::cout << filenameVS << ", " << filenameFS << " Shader compiling is done.\n";
 
 	return ShaderProgram;
 }
@@ -174,6 +188,26 @@ void Renderer::DrawSolidRect(float x, float y, float z, float size, float r, flo
 	glEnableVertexAttribArray(attribPosition);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBORect);
 	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glDisableVertexAttribArray(attribPosition);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void Renderer::DrawTriangle()
+{
+	//Program select
+	glUseProgram(m_TriangleShader);
+
+	int attribPosition = glGetAttribLocation(m_TriangleShader, "a_Position");
+	glEnableVertexAttribArray(attribPosition);
+	glBindBuffer(GL_ARRAY_BUFFER, m_TriangleVBO);
+	glVertexAttribPointer(
+		attribPosition, 3, 
+		GL_FLOAT, GL_FALSE, 
+		/*sizeof(float) * 3*/ /*stride*/ 0 , 0);
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
