@@ -209,12 +209,12 @@ float gTime = 0;
 
 void Renderer::DrawTriangle()
 {
-	gTime += 0.001f;
+	gTime += 0.0001f;
 	//Program select
 	glUseProgram(m_TriangleShader);
 
 	int uTime = glGetUniformLocation(m_TriangleShader, "u_Time");
-	glUniform1f(uTime, 0);
+	glUniform1f(uTime, gTime);
 
 	int attribPosition = glGetAttribLocation(m_TriangleShader, "a_Position");
 	glEnableVertexAttribArray(attribPosition);
