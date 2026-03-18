@@ -396,3 +396,7 @@ FodyWeavers.xsd
 /[Tt]ools/*/*.pdb
 /[Tt]ools/*/*.opendb
 /[Tt]ools/*/*.VC.db
+SimpleGame/x64/Debug/vc143.idb
+x64/Debug/SimpleGame.exe
+*.idb
+*.exe

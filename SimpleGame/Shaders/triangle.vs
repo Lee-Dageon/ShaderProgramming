@@ -2,6 +2,11 @@
 
 in vec3 a_Position;
 uniform float u_Time;
+in vec3 a_Mass;
+in vec2 a_Vel;
+
+const float c_PI = 3.141592;
+const vec2 c_Gravity = vec2(0, -9.8);
 
 // Basic: move right and reset
 void Basic()
@@ -46,7 +51,19 @@ void Circle()
 	gl_Position = newPosition;
 }
 
+void falling()
+{
+	float t = mod(u_Time, 1.0);	// 0~1
+	vec4 newPos;
+	newPos.x = a_Position.x;
+	newPos.y = a_Position.y + a_Vel.y * t + 0.5 * c_Gravity.y * t * t;
+	newPos.z = 0;
+	newPos.w = 1;
+
+	gl_Position = newPos;
+}
+
 void main()
 {
-	sin2();
+	falling();
 }

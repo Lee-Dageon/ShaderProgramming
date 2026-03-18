@@ -51,17 +51,28 @@ void Renderer::CreateVertexBufferObjects()
 	float centerX = 0;
 	float centerY = 0;
 	float size = 0.1;
+	float mass = 1;
+
+	// 속도
+	float vx = 0;
+	float vy = 0;
 
 	float triangle[]
 		=
 	{
 		centerX - size / 2, centerY - size / 2, 0,	//v0
-		centerX + size / 2, centerY - size / 2, 0,	//v1
-		centerX + size / 2, centerY + size / 2, 0,	//v2 triangle 1
+		mass, vx, vy,
+		centerX + size / 2, centerY - size / 2, 0,
+		mass, vx, vy,//v1
+		centerX + size / 2, centerY + size / 2, 0,
+		mass,vx, vy,//v2 triangle 1
 
-		centerX - size / 2, centerY - size / 2, 0,	//v0
-		centerX + size / 2, centerY + size / 2, 0,	//v1
-		centerX - size / 2, centerY + size / 2, 0	//v2 triangle 2
+		centerX - size / 2, centerY - size / 2, 0,
+		mass,vx, vy,//v0
+		centerX + size / 2, centerY + size / 2, 0,
+		mass,vx, vy,	//v1
+		centerX - size / 2, centerY + size / 2, 0,
+		mass, vx, vy	//v2 triangle 2
 	};
 
 	glGenBuffers(1, &m_TriangleVBO);
@@ -216,13 +227,31 @@ void Renderer::DrawTriangle()
 	int uTime = glGetUniformLocation(m_TriangleShader, "u_Time");
 	glUniform1f(uTime, gTime);
 
-	int attribPosition = glGetAttribLocation(m_TriangleShader, "a_Position");
+	//stride 설정
+	int attribPosition = glGetAttribLocation(m_TriangleShader, 
+		"a_Position");
+	int attribMass = glGetAttribLocation(m_TriangleShader, 
+		"a_Mass");
+	int attribVel = glGetAttribLocation(m_TriangleShader,
+		"a_Vel");
+
 	glEnableVertexAttribArray(attribPosition);
+	glEnableVertexAttribArray(attribMass);
+	glEnableVertexAttribArray(attribVel);
+
 	glBindBuffer(GL_ARRAY_BUFFER, m_TriangleVBO);
 	glVertexAttribPointer(
-		attribPosition, 3, 
+		attribPosition, 3, /*세 개씩 읽어라*/
 		GL_FLOAT, GL_FALSE, 
-		/*sizeof(float) * 3*/ /*stride*/ 0 , 0);
+		6 * sizeof(float), /*start position*/ 0);
+	glVertexAttribPointer(
+		attribMass, 1, /*하나씩 읽어라*/
+		GL_FLOAT, GL_FALSE,
+		6 * sizeof(float), (GLvoid*)(sizeof(float) * 3));
+	glVertexAttribPointer(
+		attribVel, 2, /*두 개씩 읽어라*/
+		GL_FLOAT, GL_FALSE,
+		6 * sizeof(float), (GLvoid*)(sizeof(float) * 4));
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
