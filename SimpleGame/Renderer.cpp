@@ -54,8 +54,8 @@ void Renderer::CreateVertexBufferObjects()
 	float mass = 1;
 
 	// ¼Óµµ
-	float vx = 0;
-	float vy = 0;
+	float vx = 1;
+	float vy = 1;
 
 	float triangle[]
 		=
