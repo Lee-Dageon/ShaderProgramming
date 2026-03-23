@@ -70,10 +70,10 @@ void falling()
 		float scale = a_RV;
 		float t = mod(newTime, 1.0);	// 0~1
 		vec4 newPos;
-		float initPosX = a_Position.x + sin(a_RV * 2 * c_PI);	// 0~2pi, random initial position
-		float initPosY = a_Position.y + cos(a_RV * 2 * c_PI);
-		newPos.x = initPosX + a_Vel.x * t + 0.5 * c_Gravity.x * t*t;
-		newPos.y = initPosY + a_Vel.y * t + 0.5 * c_Gravity.y * t*t;
+		float initPosX = a_Position.x * scale + sin(a_RV * 2 * c_PI);	// 0~2pi, random initial position
+		float initPosY = a_Position.y * scale + cos(a_RV * 2 * c_PI);
+		newPos.x = a_Position.x + a_Vel.x * t + 0.5 * c_Gravity.x * t*t;
+		newPos.y = a_Position.y + a_Vel.y * t + 0.5 * c_Gravity.y * t*t;
 		newPos.z = 0;
 		newPos.w = 1;
 
@@ -85,3 +85,6 @@ void main()
 {
 	falling();
 }
+
+/* rv 2개 더 추가됐으니
+Falling 이라는 API 처럼 하나의 함수에 묶어서 예쁜 이펙트를 만들어줘. */

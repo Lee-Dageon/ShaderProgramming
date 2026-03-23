@@ -355,8 +355,8 @@ void Renderer::GenParticles(int num)
 		float mass = 1;
 		float vx = ((rand() % 200) - 100) / 10.0f;
 		float vy = ((rand() % 200) - 100) / 50.0f;
-		float rv = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-		float rv1 = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+		float rv = ((rand() % 100)) / 100.0f; // 0 ~ 1 사이의 랜덤 값
+		float rv1 = ((rand() % 100)) / 100.0f;
 
 		// 파티클 하나(사각형)를 구성하는 6개의 정점 데이터 생성
 		Vertex v[6];
