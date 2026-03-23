@@ -59,7 +59,7 @@ float pseudoRandom(float seed) {
 void falling()
 {
 	//emitTime
-	float newTime = u_Time - pseudoRandom(a_RV);	// -면 태어나지 않은 것
+	float newTime = u_Time - pseudoRandom(a_Vel.x);	// -면 태어나지 않은 것
 	
 	// a_RV 를 0.5 대신 넣으면 됨
 	// 원 상에서 지속되는 결과물
@@ -67,16 +67,17 @@ void falling()
 
 	if(newTime > 0)	// 태어난 것
 	{
-	float t = mod(newTime, 1.0);	// 0~1
-	vec4 newPos;
-	//float initPosX = a_Position.x + sin(a_RV * 2 * c_PI);	// 0~2pi, random initial position
-	//float initPosY = a_Position.y + cos(a_RV * 2 * c_PI);
-	newPos.x = a_Position.x + a_Vel.x * t + 0.5 * c_Gravity.x * t*t;
-	newPos.y = a_Position.y + a_Vel.y * t + 0.5 * c_Gravity.y * t*t;
-	newPos.z = 0;
-	newPos.w = 1;
+		float scale = a_RV;
+		float t = mod(newTime, 1.0);	// 0~1
+		vec4 newPos;
+		float initPosX = a_Position.x + sin(a_RV * 2 * c_PI);	// 0~2pi, random initial position
+		float initPosY = a_Position.y + cos(a_RV * 2 * c_PI);
+		newPos.x = initPosX + a_Vel.x * t + 0.5 * c_Gravity.x * t*t;
+		newPos.y = initPosY + a_Vel.y * t + 0.5 * c_Gravity.y * t*t;
+		newPos.z = 0;
+		newPos.w = 1;
 
-	gl_Position = newPos;
+		gl_Position = newPos;
 	}
 }
 
