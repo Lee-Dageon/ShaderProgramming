@@ -55,6 +55,8 @@ void falling()
 {
 	float t = mod(u_Time, 1.0);	// 0~1
 	vec4 newPos;
+	//float initPosX = a_Position.x + sin(a_RV * 2 * c_PI);	// 0~2pi, random initial position
+	//float initPosY = a_Position.y + cos(a_RV * 2 * c_PI);
 	newPos.x = a_Position.x + a_Vel.x * t + 0.5 * c_Gravity.x * t*t;
 	newPos.y = a_Position.y + a_Vel.y * t + 0.5 * c_Gravity.y * t*t;
 	newPos.z = 0;

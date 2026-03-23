@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Renderer.h"
+#include <vector>
 
 Renderer::Renderer(int windowSizeX, int windowSizeY)
 {
@@ -21,6 +22,8 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_SolidRectShader = CompileShaders("./Shaders/SolidRect.vs", "./Shaders/SolidRect.fs");
 	m_TriangleShader = CompileShaders("./Shaders/triangle.vs", "./Shaders/triangle.fs");
 	
+	GenParticles(1000);
+
 	//Create VBOs
 	CreateVertexBufferObjects();
 
@@ -264,4 +267,116 @@ void Renderer::GetGLPosition(float x, float y, float *newX, float *newY)
 {
 	*newX = x * 2.f / m_WindowSizeX;
 	*newY = y * 2.f / m_WindowSizeY;
+}
+
+void Renderer::DrawParticles()
+{
+	gTime += 0.0001f; // 시간 증가 (애니메이션 효과를 위해)
+	// Program select - 파티클 렌더링에 m_TriangleShader를 재사용합니다.
+	glUseProgram(m_TriangleShader);
+
+	// u_Time uniform은 이미 설정되었을 수 있으나, 파티클에도 필요하다면 다시 설정
+	int uTime = glGetUniformLocation(m_TriangleShader, "u_Time");
+	glUniform1f(uTime, gTime); // gTime은 Renderer.cpp 전역 변수
+
+	// attribute 위치 가져오기 (셰이더에 정의된 이름과 매칭)
+	int attribPosition = glGetAttribLocation(m_TriangleShader, "a_Position");
+	int attribMass = glGetAttribLocation(m_TriangleShader, "a_Mass");
+	int attribVel = glGetAttribLocation(m_TriangleShader, "a_Vel");
+
+	// attribute 배열 활성화
+	glEnableVertexAttribArray(attribPosition);
+	glEnableVertexAttribArray(attribMass);
+	glEnableVertexAttribArray(attribVel);
+
+	// 파티클 VBO 바인딩
+	glBindBuffer(GL_ARRAY_BUFFER, m_ParticleVBO);
+
+	// 파티클 위치 attribute 설정 (stride 및 offset은 GenParticles의 Vertex struct와 일치)
+	glVertexAttribPointer(
+		attribPosition, 3, /*세 개씩 읽어라*/
+		GL_FLOAT, GL_FALSE, 
+		6 * sizeof(float), /*start position*/ 0
+	);
+	
+	// 파티클 질량 attribute 설정
+	glVertexAttribPointer(
+		attribMass, 1, /*하나씩 읽어라*/
+		GL_FLOAT, GL_FALSE,
+		6 * sizeof(float), (GLvoid*)(sizeof(float) * 3)
+	);
+
+	// 파티클 속도 attribute 설정
+	glVertexAttribPointer(
+		attribVel, 2, /*두 개씩 읽어라*/
+		GL_FLOAT, GL_FALSE,
+		6 * sizeof(float), (GLvoid*)(sizeof(float) * 4)
+	);
+
+	// 파티클 그리기
+	glDrawArrays(GL_TRIANGLES, 0, m_VBOParticleCount); // GenParticles에서 계산한 총 정점 개수만큼 그림
+
+	// attribute 배열 비활성화
+	glDisableVertexAttribArray(attribPosition);
+	glDisableVertexAttribArray(attribMass); 
+	glDisableVertexAttribArray(attribVel); 
+
+	// 현재 바인딩된 프레임버퍼를 기본 프레임버퍼로 되돌림 (DrawTriangle에 따라 동일하게)
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void Renderer::GenParticles(int num)
+{
+	// particle 데이터
+	struct Vertex
+	{
+		float x, y, z;
+		float mass;
+		float vx, vy;
+	};
+
+	// num * 6개의 정점 데이터를 담을 벡터(동적 배열)
+	std::vector<Vertex> vertices;
+	vertices.resize(num * 6); // 파티클 하나당 6개의 정점이므로 총 크기를 미리 할당
+
+	for (int i = 0; i < num; i++)
+	{
+		// 각 파티클의 초기 위치, 크기, 질량, 속도를 랜덤하게 생성
+		float centerX = ((rand() % 10) - 5) / 100.0f; // -0.05 ~ 0.05 (중앙 근처)
+		float centerY = ((rand() % 10) - 5) / 100.0f;
+		float size = 0.05;
+		float mass = 1;
+		float vx = ((rand() % 200) - 100) / 10.0f;
+		float vy = ((rand() % 200) - 100) / 50.0f; 
+
+		// 파티클 하나(사각형)를 구성하는 6개의 정점 데이터 생성
+		Vertex v[6];
+		// Triangle 1
+		v[0] = { centerX - size / 2, centerY - size / 2, 0.0f, mass, vx, vy }; // v0
+		v[1] = { centerX + size / 2, centerY - size / 2, 0.0f, mass, vx, vy }; // v1
+		v[2] = { centerX + size / 2, centerY + size / 2, 0.0f, mass, vx, vy }; // v2
+		// Triangle 2
+		v[3] = { centerX - size / 2, centerY - size / 2, 0.0f, mass, vx, vy }; // v0
+		v[4] = { centerX + size / 2, centerY + size / 2, 0.0f, mass, vx, vy }; // v2
+		v[5] = { centerX - size / 2, centerY + size / 2, 0.0f, mass, vx, vy }; // v3
+
+		// 생성된 6개의 정점 데이터를 전체 벡터에 복사
+		memcpy(&vertices[i * 6], v, sizeof(Vertex) * 6);
+	}
+
+	// 이전에 생성된 VBO가 있다면 삭제
+	if (m_ParticleVBO != 0)
+	{
+		glDeleteBuffers(1, &m_ParticleVBO);
+	}
+
+	// VBO 생성 및 데이터 업로드
+	glGenBuffers(1, &m_ParticleVBO); // VBO 핸들(ID) 생성
+	glBindBuffer(GL_ARRAY_BUFFER, m_ParticleVBO); // 생성한 VBO를 현재 작업 대상으로 지정
+
+	// CPU에 있는 전체 정점 데이터를 GPU의 VBO로 복사
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * num * 6, vertices.data(), GL_STATIC_DRAW);
+
+	// 총 정점 개수를 멤버 변수에 저장
+	m_VBOParticleCount = num * 6;
 }
