@@ -4,6 +4,7 @@ in vec3 a_Position;
 uniform float u_Time;
 in vec3 a_Mass;
 in vec2 a_Vel;
+in float a_RV;
 
 const float c_PI = 3.141592;
 const vec2 c_Gravity = vec2(0, -9.8);
@@ -51,9 +52,22 @@ void Circle()
 	gl_Position = newPosition;
 }
 
+float pseudoRandom(float seed) {
+    return fract(sin(seed) * 43758.5453123);
+}
+
 void falling()
 {
-	float t = mod(u_Time, 1.0);	// 0~1
+	//emitTime
+	float newTime = u_Time - pseudoRandom(a_RV);	// -면 태어나지 않은 것
+	
+	// a_RV 를 0.5 대신 넣으면 됨
+	// 원 상에서 지속되는 결과물
+	// pseudoRandom(a_RV)
+
+	if(newTime > 0)	// 태어난 것
+	{
+	float t = mod(newTime, 1.0);	// 0~1
 	vec4 newPos;
 	//float initPosX = a_Position.x + sin(a_RV * 2 * c_PI);	// 0~2pi, random initial position
 	//float initPosY = a_Position.y + cos(a_RV * 2 * c_PI);
@@ -63,6 +77,7 @@ void falling()
 	newPos.w = 1;
 
 	gl_Position = newPos;
+	}
 }
 
 void main()
