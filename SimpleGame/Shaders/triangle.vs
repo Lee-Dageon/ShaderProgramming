@@ -95,7 +95,7 @@ void Thrust()
 		float t = mod (newTime, 1.0);	// 0~1
 		vec4 newPosition;
 		newPosition.x = a_Position.x - 1 + t*2;
-		newPosition.y = a_Position.y + amp*sin(t*2*3.141592);	// 0~2pi
+		newPosition.y = a_Position.y + amp*sin(t*2*3.141592 * a_RV2);	// 0~2pi
 		newPosition.z = a_Position.z;
 		newPosition.w = 1;
 		gl_Position = newPosition;
