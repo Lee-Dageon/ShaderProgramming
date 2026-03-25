@@ -84,12 +84,14 @@ void falling()
 	}
 }
 
+// ÁøÆøÀ» ´Ù ¹Ù²ãº¸ÀÚ
 void Thrust()
 {
+	float amp = a_RV;
 	float t = mod (u_Time, 1.0);	// 0~1
 	vec4 newPosition;
 	newPosition.x = a_Position.x - 1 + t*2;
-	newPosition.y = a_Position.y + sin(t*2*3.141592);	// 0~2pi
+	newPosition.y = a_Position.y + amp*sin(t*2*3.141592);	// 0~2pi
 	newPosition.z = a_Position.z;
 	newPosition.w = 1;
 	gl_Position = newPosition;

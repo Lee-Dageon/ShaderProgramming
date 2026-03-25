@@ -342,7 +342,7 @@ void Renderer::DrawParticles()
 
 	// 파티클 그리기
 	// Draw call
-	glDrawArrays(GL_TRIANGLES, 0, m_VBOParticleCount); // GenParticles에서 계산한 총 정점 개수만큼 그림
+	glDrawArrays(GL_TRIANGLES, 0, 6 * 10); // GenParticles에서 계산한 총 정점 개수만큼 그림
 
 	// attribute 배열 비활성화
 	glDisableVertexAttribArray(attribPosition);
@@ -376,8 +376,8 @@ void Renderer::GenParticles(int num)
 	for (int i = 0; i < num; i++)
 	{
 		// 각 파티클의 초기 위치, 크기, 질량, 속도를 랜덤하게 생성
-		float centerX = ((rand() % 10) - 5) / 100.0f; // -0.05 ~ 0.05 (중앙 근처)
-		float centerY = ((rand() % 10) - 5) / 100.0f;
+		float centerX = 0.0f;
+		float centerY = 0.0f;
 		float size = 0.01;
 		float mass = 1;
 
