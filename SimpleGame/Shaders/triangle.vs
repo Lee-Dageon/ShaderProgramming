@@ -91,7 +91,7 @@ void Thrust()
 
 	if(newTime > 0)	// 태어난 것
 	{
-		float amp = a_RV;
+		float amp = 2 * (a_RV - 0.5);
 		float t = mod (newTime, 1.0);	// 0~1
 		vec4 newPosition;
 		newPosition.x = a_Position.x - 1 + t*2;
@@ -99,6 +99,10 @@ void Thrust()
 		newPosition.z = a_Position.z;
 		newPosition.w = 1;
 		gl_Position = newPosition;
+	}
+	else
+	{	
+		gl_Position = vec4(-100, -100, -100, 1);	// 태어나지 않은 것
 	}
 }
 

@@ -22,7 +22,7 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_SolidRectShader = CompileShaders("./Shaders/SolidRect.vs", "./Shaders/SolidRect.fs");
 	m_TriangleShader = CompileShaders("./Shaders/triangle.vs", "./Shaders/triangle.fs");
 
-	GenParticles(10000);
+	GenParticles(1000);
 
 	//Create VBOs
 	CreateVertexBufferObjects();
@@ -342,7 +342,7 @@ void Renderer::DrawParticles()
 
 	// 파티클 그리기
 	// Draw call
-	glDrawArrays(GL_TRIANGLES, 0, 6 * 100); // GenParticles에서 계산한 총 정점 개수만큼 그림
+	glDrawArrays(GL_TRIANGLES, 0, m_VBOParticleCount); // GenParticles에서 계산한 총 정점 개수만큼 그림
 
 	// attribute 배열 비활성화
 	glDisableVertexAttribArray(attribPosition);
