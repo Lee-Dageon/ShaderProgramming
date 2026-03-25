@@ -87,14 +87,19 @@ void falling()
 // 진폭을 다 바꿔보자
 void Thrust()
 {
-	float amp = a_RV;
-	float t = mod (u_Time, 1.0);	// 0~1
-	vec4 newPosition;
-	newPosition.x = a_Position.x - 1 + t*2;
-	newPosition.y = a_Position.y + amp*sin(t*2*3.141592);	// 0~2pi
-	newPosition.z = a_Position.z;
-	newPosition.w = 1;
-	gl_Position = newPosition;
+	float newTime = u_Time - a_RV1 * 3;	// -면 태어나지 않은 것
+
+	if(newTime > 0)	// 태어난 것
+	{
+		float amp = a_RV;
+		float t = mod (newTime, 1.0);	// 0~1
+		vec4 newPosition;
+		newPosition.x = a_Position.x - 1 + t*2;
+		newPosition.y = a_Position.y + amp*sin(t*2*3.141592);	// 0~2pi
+		newPosition.z = a_Position.z;
+		newPosition.w = 1;
+		gl_Position = newPosition;
+	}
 }
 
 void main()
