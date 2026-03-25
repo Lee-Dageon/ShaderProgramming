@@ -5,6 +5,7 @@ uniform float u_Time;
 in vec3 a_Mass;
 in vec2 a_Vel;
 in float a_RV;
+in float a_RV1;
 
 const float c_PI = 3.141592;
 const vec2 c_Gravity = vec2(0, -9.8);
