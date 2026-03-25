@@ -8,6 +8,8 @@ in float a_RV;
 in float a_RV1;
 in float a_RV2;
 
+out float v_Grey;
+
 const float c_PI = 3.141592;
 const vec2 c_Gravity = vec2(0, -9.8);
 
@@ -104,10 +106,12 @@ void Thrust()
 		
 		newPosition.z = a_Position.z;
 		gl_Position = newPosition;
+		v_Grey = 1 - t;	// 시간이 지날수록 어두워짐
 	}
 	else
 	{	
 		gl_Position = vec4(-100, -100, -100, 1);	// 태어나지 않은 것
+		v_Grey = 0;
 	}
 }
 
