@@ -22,7 +22,7 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_SolidRectShader = CompileShaders("./Shaders/SolidRect.vs", "./Shaders/SolidRect.fs");
 	m_TriangleShader = CompileShaders("./Shaders/triangle.vs", "./Shaders/triangle.fs");
 
-	GenParticles(1000);
+	GenParticles(5000);
 
 	//Create VBOs
 	CreateVertexBufferObjects();

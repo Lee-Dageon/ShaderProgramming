@@ -88,11 +88,11 @@ void falling()
 void Thrust()
 {
 	float newTime = u_Time - a_RV1 * 3;	// -면 태어나지 않은 것
-
 	if(newTime > 0)	// 태어난 것
 	{
-		float amp = 2 * (a_RV - 0.5);
 		float t = mod (newTime, 1.0);	// 0~1
+		float ampScale = 0.5 * t;
+		float amp = 2 *(a_RV - 0.5) * ampScale;
 		float period = a_RV2;
 		vec4 newPosition;
 		newPosition.x = a_Position.x - 1 + t*2;
