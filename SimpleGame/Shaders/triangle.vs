@@ -91,10 +91,10 @@ void Thrust()
 	if(newTime > 0)	// 태어난 것
 	{
 		float t = mod (newTime, 1.0);	// 0~1
-		float ampScale = 0.5 * t;
+		float ampScale = 0.5 - 0.5 * t;
 		float amp = 2 *(a_RV - 0.5) * ampScale;
 		float period = a_RV2;
-		float sizeScale = 2 * t;
+		float sizeScale = 2 - 2 * t;
 		vec4 newPosition;
 
 		newPosition.x = a_Position.x * sizeScale
