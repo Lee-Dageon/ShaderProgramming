@@ -22,7 +22,7 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_SolidRectShader = CompileShaders("./Shaders/SolidRect.vs", "./Shaders/SolidRect.fs");
 	m_TriangleShader = CompileShaders("./Shaders/triangle.vs", "./Shaders/triangle.fs");
 
-	GenParticles(1000);
+	GenParticles(10000);
 
 	//Create VBOs
 	CreateVertexBufferObjects();
@@ -285,6 +285,7 @@ void Renderer::DrawParticles()
 	int attribVel = glGetAttribLocation(m_TriangleShader, "a_Vel");
 	int attribRV = glGetAttribLocation(m_TriangleShader, "a_RV");
 	int attribRV1 = glGetAttribLocation(m_TriangleShader, "a_RV1");
+	int attribRV2 = glGetAttribLocation(m_TriangleShader, "a_RV2");
 
 	// attribute 배열 활성화
 	glEnableVertexAttribArray(attribPosition);
@@ -292,6 +293,7 @@ void Renderer::DrawParticles()
 	glEnableVertexAttribArray(attribVel);
 	glEnableVertexAttribArray(attribRV);
 	glEnableVertexAttribArray(attribRV1);
+	glEnableVertexAttribArray(attribRV2);
 
 	// 파티클 VBO 바인딩
 	glBindBuffer(GL_ARRAY_BUFFER, m_ParticleVBO);
@@ -300,21 +302,42 @@ void Renderer::DrawParticles()
 	glVertexAttribPointer(
 		attribPosition, 3, /*세 개씩 읽어라*/
 		GL_FLOAT, GL_FALSE,
-		8 * sizeof(float), /*start position*/ 0
+		9 * sizeof(float), /*start position*/ 0
 	);
 
 	// 파티클 질량 attribute 설정
 	glVertexAttribPointer(
 		attribMass, 1, /*하나씩 읽어라*/
 		GL_FLOAT, GL_FALSE,
-		8 * sizeof(float), (GLvoid*)(sizeof(float) * 3)
+		9 * sizeof(float), (GLvoid*)(sizeof(float) * 3)
 	);
 
 	// 파티클 속도 attribute 설정
 	glVertexAttribPointer(
 		attribVel, 2, /*두 개씩 읽어라*/
 		GL_FLOAT, GL_FALSE,
-		8 * sizeof(float), (GLvoid*)(sizeof(float) * 4)
+		9 * sizeof(float), (GLvoid*)(sizeof(float) * 4)
+	);
+
+	// 파티클 RV attribute 설정
+	glVertexAttribPointer(
+		attribRV, 1, /*한 개씩 읽어라*/
+		GL_FLOAT, GL_FALSE,
+		9 * sizeof(float), (GLvoid*)(sizeof(float) * 6)
+	);
+
+	// 파티클 RV1 attribute 설정
+	glVertexAttribPointer(
+		attribRV1, 1, /*한 개씩 읽어라*/
+		GL_FLOAT, GL_FALSE,
+		9 * sizeof(float), (GLvoid*)(sizeof(float) * 7)
+	);
+
+	// 파티클 RV2 attribute 설정
+	glVertexAttribPointer(
+		attribRV2, 1, /*한 개씩 읽어라*/
+		GL_FLOAT, GL_FALSE,
+		9 * sizeof(float), (GLvoid*)(sizeof(float) * 8)
 	);
 
 	// 파티클 그리기
@@ -325,6 +348,9 @@ void Renderer::DrawParticles()
 	glDisableVertexAttribArray(attribPosition);
 	glDisableVertexAttribArray(attribMass);
 	glDisableVertexAttribArray(attribVel);
+	glDisableVertexAttribArray(attribRV);
+	glDisableVertexAttribArray(attribRV1);
+	glDisableVertexAttribArray(attribRV2);
 
 	// 현재 바인딩된 프레임버퍼를 기본 프레임버퍼로 되돌림 (DrawTriangle에 따라 동일하게)
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -340,6 +366,7 @@ void Renderer::GenParticles(int num)
 		float vx, vy;
 		float rv;
 		float rv1;
+		float rv2;
 	};
 
 	// num * 6개의 정점 데이터를 담을 벡터(동적 배열)
@@ -353,21 +380,26 @@ void Renderer::GenParticles(int num)
 		float centerY = ((rand() % 10) - 5) / 100.0f;
 		float size = 0.01;
 		float mass = 1;
-		float vx = ((rand() % 200) - 100) / 10.0f;
-		float vy = ((rand() % 200) - 100) / 50.0f;
+
+		// x축 속도를 0으로 설정하여 양옆으로 튀지 않게 합니다.
+		float vx = 0.0f;
+		// 위로 튀고 떨어지는 느낌을 줄이려면 y축 초기 속도(vy)도 0.0f 또는 음수로 조절할 수 있습니다.
+		float vy = 0.0f; 
+
 		float rv = ((rand() % 100)) / 100.0f; // 0 ~ 1 사이의 랜덤 값
 		float rv1 = ((rand() % 100)) / 100.0f;
+		float rv2 = ((rand() % 100)) / 100.0f;
 
 		// 파티클 하나(사각형)를 구성하는 6개의 정점 데이터 생성
 		Vertex v[6];
 		// Triangle 1
-		v[0] = { centerX - size / 2, centerY - size / 2, 0.0f, mass, vx, vy, rv, rv1 }; // v0
-		v[1] = { centerX + size / 2, centerY - size / 2, 0.0f, mass, vx, vy, rv, rv1 }; // v1
-		v[2] = { centerX + size / 2, centerY + size / 2, 0.0f, mass, vx, vy, rv, rv1 }; // v2
+		v[0] = { centerX - size / 2, centerY - size / 2, 0.0f, mass, vx, vy, rv, rv1, rv2 }; // v0
+		v[1] = { centerX + size / 2, centerY - size / 2, 0.0f, mass, vx, vy, rv, rv1, rv2 }; // v1
+		v[2] = { centerX + size / 2, centerY + size / 2, 0.0f, mass, vx, vy, rv, rv1, rv2 }; // v2
 		// Triangle 2
-		v[3] = { centerX - size / 2, centerY - size / 2, 0.0f, mass, vx, vy, rv, rv1 }; // v0
-		v[4] = { centerX + size / 2, centerY + size / 2, 0.0f, mass, vx, vy, rv, rv1 }; // v2
-		v[5] = { centerX - size / 2, centerY + size / 2, 0.0f, mass, vx, vy, rv, rv1 }; // v3
+		v[3] = { centerX - size / 2, centerY - size / 2, 0.0f, mass, vx, vy, rv, rv1, rv2 }; // v0
+		v[4] = { centerX + size / 2, centerY + size / 2, 0.0f, mass, vx, vy, rv, rv1, rv2 }; // v2
+		v[5] = { centerX - size / 2, centerY + size / 2, 0.0f, mass, vx, vy, rv, rv1, rv2 }; // v3
 
 		// 생성된 6개의 정점 데이터를 전체 벡터에 복사
 		memcpy(&vertices[i * 6], v, sizeof(Vertex) * 6);

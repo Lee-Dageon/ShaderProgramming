@@ -6,6 +6,7 @@ in vec3 a_Mass;
 in vec2 a_Vel;
 in float a_RV;
 in float a_RV1;
+in float a_RV2;
 
 const float c_PI = 3.141592;
 const vec2 c_Gravity = vec2(0, -9.8);
@@ -60,7 +61,7 @@ float pseudoRandom(float seed) {
 void falling()
 {
 	//emitTime
-	float newTime = u_Time - pseudoRandom(a_Vel.x);	// -면 태어나지 않은 것
+	float newTime = u_Time - a_RV1 * 3;	// -면 태어나지 않은 것
 	
 	// a_RV 를 0.5 대신 넣으면 됨
 	// 원 상에서 지속되는 결과물
@@ -68,13 +69,14 @@ void falling()
 
 	if(newTime > 0)	// 태어난 것
 	{
-		float scale = a_RV;
-		float t = mod(newTime, 1.0);	// 0~1
+		float lifeTime = a_RV2;
+		float t = mod(newTime, lifeTime);	// 0~1
+		float scale = pseudoRandom(a_RV1) * ((lifeTime-t)/lifeTime);
 		vec4 newPos;
 		float initPosX = a_Position.x * scale + sin(a_RV * 2 * c_PI);	// 0~2pi, random initial position
 		float initPosY = a_Position.y * scale + cos(a_RV * 2 * c_PI);
-		newPos.x = a_Position.x + a_Vel.x * t + 0.5 * c_Gravity.x * t*t;
-		newPos.y = a_Position.y + a_Vel.y * t + 0.5 * c_Gravity.y * t*t;
+		newPos.x = initPosX + a_Vel.x * t + 0.5 * c_Gravity.x * t*t;
+		newPos.y = initPosY + a_Vel.y * t + 0.5 * c_Gravity.y * t*t;
 		newPos.z = 0;
 		newPos.w = 1;
 
@@ -82,9 +84,20 @@ void falling()
 	}
 }
 
+void Thrust()
+{
+	float t = mod (u_Time, 1.0);	// 0~1
+	vec4 newPosition;
+	newPosition.x = a_Position.x - 1 + t*2;
+	newPosition.y = a_Position.y + sin(t*2*3.141592);	// 0~2pi
+	newPosition.z = a_Position.z;
+	newPosition.w = 1;
+	gl_Position = newPosition;
+}
+
 void main()
 {
-	falling();
+	Thrust();
 }
 
 /* rv 2개 더 추가됐으니
