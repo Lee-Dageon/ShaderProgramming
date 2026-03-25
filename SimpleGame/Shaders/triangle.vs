@@ -2,13 +2,14 @@
 
 in vec3 a_Position;
 uniform float u_Time;
-in vec3 a_Mass;
+in float a_Mass;
 in vec2 a_Vel;
 in float a_RV;
 in float a_RV1;
 in float a_RV2;
 
 out float v_Grey;
+out vec3 v_Color;
 
 const float c_PI = 3.141592;
 const vec2 c_Gravity = vec2(0, -9.8);
@@ -52,7 +53,7 @@ void Circle()
 	newPosition.x = a_Position.x + sin(t*2*3.141592);	// 0~2pi
 	newPosition.y = a_Position.y + cos(t*2*3.141592);	// 0~2pi
 	newPosition.z = a_Position.z;
-	newPosition.w = 1.0f;
+    newPosition.w = 1.0;
 	gl_Position = newPosition;
 }
 
@@ -86,7 +87,6 @@ void falling()
 	}
 }
 
-// 진폭을 다 바꿔보자
 void Thrust()
 {
 	float newTime = u_Time - a_RV1 * 3;	// -면 태어나지 않은 것
@@ -107,11 +107,19 @@ void Thrust()
 		newPosition.z = a_Position.z;
 		gl_Position = newPosition;
 		v_Grey = 1 - t;	// 시간이 지날수록 어두워짐
+
+		// 진폭을 색상으로 매핑: 진폭 크기가 작을수록 빨강(1,0,0), 클수록 노랑(1,1,0)
+		float ampMagnitude = abs(amp); // 0 ~ ampScale
+		// ampScale의 최대값은 0.5이므로 0.5로 정규화하면 0..1 범위를 얻음
+		float ampNorm = clamp(ampMagnitude / 0.5, 0.0, 1.0);
+		// 그린 채널을 ampNorm으로 증가시켜 red->yellow로 변경 (red + green)
+		v_Color = vec3(1.0, ampNorm * 2, 0.0);
 	}
 	else
 	{	
 		gl_Position = vec4(-100, -100, -100, 1);	// 태어나지 않은 것
 		v_Grey = 0;
+		v_Color = vec3(0.0);
 	}
 }
 
