@@ -4,6 +4,7 @@ layout(location=0) out vec4 FragColor;
 
 in float v_Grey;
 in vec3 v_Color;
+in vec2 v_Tex;
 
 void main()
 {

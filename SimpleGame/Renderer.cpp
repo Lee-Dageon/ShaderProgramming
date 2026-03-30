@@ -94,7 +94,7 @@ void Renderer::CreateVertexBufferObjects()
 
 		-1, -1, 0, 0, 1,
 		1, -1, 0, 1, 1,
-		1, 1, 0, 1, 0, // Triangle2
+		1, 1, 0, 1, 0 // Triangle2
 	};
 
 	glGenBuffers(1, &m_VBOFS);
@@ -459,8 +459,9 @@ void Renderer::DrawFS()
 		"a_Tex");
 
 	glEnableVertexAttribArray(attribPosition);
+	glEnableVertexAttribArray(attribTex);
 
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBOFS);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOFS);	// 바인드 버퍼는 한 번만
 	glVertexAttribPointer(
 		attribPosition, 3, /*세 개씩 읽어라*/
 		GL_FLOAT, GL_FALSE,
@@ -469,11 +470,12 @@ void Renderer::DrawFS()
 	glVertexAttribPointer(
 		attribTex, 2, /*두 개씩 읽어라*/
 		GL_FLOAT, GL_FALSE,
-		5 * sizeof(float), (GLvoid*)sizeof(float));
+		5 * sizeof(float), (GLvoid*)(3*sizeof(float)));
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	glDisableVertexAttribArray(attribPosition);
+	glDisableVertexAttribArray(attribTex);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
