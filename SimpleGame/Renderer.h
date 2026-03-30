@@ -18,6 +18,7 @@ public:
 	void DrawTriangle();
 	void GenParticles(int num);
 	void DrawParticles();
+	void DrawFS();
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
@@ -40,5 +41,8 @@ private:
 
 	GLuint m_ParticleVBO = 0;
 	GLuint m_VBOParticleCount = 0;
+
+	GLuint m_VBOFS = 0;
+	GLuint m_FSShader = 0;
 };
 

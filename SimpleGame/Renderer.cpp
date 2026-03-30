@@ -21,7 +21,8 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	//Load shaders
 	m_SolidRectShader = CompileShaders("./Shaders/SolidRect.vs", "./Shaders/SolidRect.fs");
 	m_TriangleShader = CompileShaders("./Shaders/triangle.vs", "./Shaders/triangle.fs");
-
+	m_FSShader = CompileShaders("./Shaders/FS.vs", "./Shaders/FS.fs");
+	
 	GenParticles(5000);
 
 	//Create VBOs
@@ -83,6 +84,25 @@ void Renderer::CreateVertexBufferObjects()
 
 	//GPU 메모리에 올림
 	glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
+
+	float rectFS[] //x,y,z:stride 3
+		=
+	{
+		-1, -1, 0,
+		1, 1, 0,
+		-1, 1, 0, // Triangle1
+
+		-1, -1, 0,
+		1, -1, 0,
+		1, 1, 0 // Triangle2
+	};
+
+	glGenBuffers(1, &m_VBOFS);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOFS);
+
+	//GPU 메모리에 올림
+	glBufferData(GL_ARRAY_BUFFER, sizeof(rectFS), rectFS, GL_STATIC_DRAW);
+
 }
 
 void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType)
@@ -420,4 +440,32 @@ void Renderer::GenParticles(int num)
 
 	// 총 정점 개수를 멤버 변수에 저장
 	m_VBOParticleCount = num * 6;
+}
+
+void Renderer::DrawFS()
+{
+	gTime += 0.0001f;
+	//Program select
+	glUseProgram(m_FSShader);
+
+	int uTime = glGetUniformLocation(m_FSShader, "u_Time");
+	glUniform1f(uTime, gTime);
+
+	//stride 설정
+	int attribPosition = glGetAttribLocation(m_FSShader,
+		"a_Pos");
+
+	glEnableVertexAttribArray(attribPosition);
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOFS);
+	glVertexAttribPointer(
+		attribPosition, 3, /*세 개씩 읽어라*/
+		GL_FLOAT, GL_FALSE,
+		3 * sizeof(float), /*start position*/ 0);
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glDisableVertexAttribArray(attribPosition);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
