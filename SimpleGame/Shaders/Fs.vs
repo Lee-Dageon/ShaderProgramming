@@ -1,6 +1,8 @@
 #version 330 core
 
-layout(location = 0) in vec3 a_Pos;
+layout(location = 0) 
+in vec3 a_Pos;
+in vec2 a_Tex;
 
 void main()
 {

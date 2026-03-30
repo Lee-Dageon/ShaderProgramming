@@ -85,16 +85,16 @@ void Renderer::CreateVertexBufferObjects()
 	//GPU 메모리에 올림
 	glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
 
-	float rectFS[] //x,y,z:stride 3
+	float rectFS[] //x,y,z, tx, ty:stride 5
 		=
 	{
-		-1, -1, 0,
-		1, 1, 0,
-		-1, 1, 0, // Triangle1
+		-1, -1, 0, 0, 1,
+		1, 1, 0, 1, 0,
+		-1, 1, 0, 0, 0, // Triangle1
 
-		-1, -1, 0,
-		1, -1, 0,
-		1, 1, 0 // Triangle2
+		-1, -1, 0, 0, 1,
+		1, -1, 0, 1, 1,
+		1, 1, 0, 1, 0, // Triangle2
 	};
 
 	glGenBuffers(1, &m_VBOFS);
@@ -454,6 +454,9 @@ void Renderer::DrawFS()
 	//stride 설정
 	int attribPosition = glGetAttribLocation(m_FSShader,
 		"a_Pos");
+	//stride 설정
+	int attribTex = glGetAttribLocation(m_FSShader,
+		"a_Tex");
 
 	glEnableVertexAttribArray(attribPosition);
 
@@ -461,7 +464,12 @@ void Renderer::DrawFS()
 	glVertexAttribPointer(
 		attribPosition, 3, /*세 개씩 읽어라*/
 		GL_FLOAT, GL_FALSE,
-		3 * sizeof(float), /*start position*/ 0);
+		5 * sizeof(float), /*start position*/ 0);
+
+	glVertexAttribPointer(
+		attribTex, 2, /*두 개씩 읽어라*/
+		GL_FLOAT, GL_FALSE,
+		5 * sizeof(float), (GLvoid*)sizeof(float));
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
