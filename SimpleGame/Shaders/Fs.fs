@@ -31,16 +31,19 @@ void Line()
 
 void Circle()
 {
-	float dist = distance(vec2(0.5, 0.5), v_Tex);
+	vec2 center = vec2(0.5, 0.5);
+	float dist = distance(center, v_Tex);
 
-	if(dist < 0.5)
-	{
-		FragColor = vec4(0);
-	}
-	else
+	FragColor = vec4(dist);
+
+	/*if(dist < 0.5)
 	{
 		FragColor = vec4(1);
 	}
+	else
+	{
+		FragColor = vec4(0);
+	}*/
 }
 
 
