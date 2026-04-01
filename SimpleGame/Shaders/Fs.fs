@@ -22,7 +22,7 @@ void Line()
 {
 	//FragColor = vec4(v_Tex.xy, 0, 1);
 	float period = v_Tex.x * 2 * PI * 5;
-	float value = abs(sin(period));
+	float value = pow(abs(sin(period)), 16);
 	FragColor = vec4(value);
 }
 
