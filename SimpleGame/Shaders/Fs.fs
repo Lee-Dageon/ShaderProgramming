@@ -46,10 +46,35 @@ void Circle()
 	}
 }
 
+void Circles()
+{
+	vec2 center = vec2(0.5, 0.5);
+	float dist = distance(center, v_Tex);
+	float width = 0.01;
+	float radius = 0.5;
+	float count = 100;
+	float gray = pow(abs(sin(dist * count* PI)), 32);
+
+
+	FragColor = vec4(gray);
+
+
+	/*if(dist > (radius - width) && dist < radius)
+	{
+		FragColor = vec4(1);
+	}
+	else
+	{
+		FragColor = vec4(0);
+	}*/
+
+
+}
+
 
 void main()
 {
-	Circle();
+	Circles();
 	//FragColor = vec4(sin(v_Tex.x));
 
 }
