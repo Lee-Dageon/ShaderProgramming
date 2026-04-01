@@ -29,9 +29,24 @@ void Line()
 	FragColor = vec4(max(valueX, valueY));
 }
 
+void Circle()
+{
+	float dist = distance(vec2(0.5, 0.5), v_Tex);
+
+	if(dist < 0.5)
+	{
+		FragColor = vec4(0);
+	}
+	else
+	{
+		FragColor = vec4(1);
+	}
+}
+
+
 void main()
 {
-	Line();
+	Circle();
 	//FragColor = vec4(sin(v_Tex.x));
 
 }
