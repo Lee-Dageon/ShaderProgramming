@@ -21,7 +21,9 @@ void Simple()
 void Line()
 {
 	//FragColor = vec4(v_Tex.xy, 0, 1);
-	float periodX = v_Tex.x * 2 * PI * 5 + 0.5 *PI;
+	float trans = PI/4;
+	float periodX = //(v_Tex.x * 2 * PI - trans) * 5;
+	v_Tex.x * 2 * PI * 5 + 0.5 * PI;
 	float periodY = v_Tex.y * 2 * PI * 5+ 0.5 * PI;
 	float valueX = pow(abs(sin(periodX)), 16);
 	float valueY = pow(abs(sin(periodY)), 16);
