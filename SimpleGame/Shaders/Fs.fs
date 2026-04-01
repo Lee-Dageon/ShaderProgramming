@@ -25,7 +25,7 @@ void Line()
 	float periodY = v_Tex.y * 2 * PI * 5;
 	float valueX = pow(abs(sin(periodX)), 16);
 	float valueY = pow(abs(sin(periodY)), 16);
-	FragColor = vec4(valueX + valueY);
+	FragColor = vec4(max(valueX, valueY));
 }
 
 void main()
