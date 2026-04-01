@@ -3,21 +3,30 @@
 layout(location=0) out vec4 FragColor;
 in vec2 v_Tex;
 
-void main()
-{
-	//FragColor = vec4(v_Tex, 0, 1);
+const float PI = 3.141592;
 
-	/*if(v_Tex.x<0.5)
+void Simple()
+{
+	if(v_Tex.x<0.5)
 	{
 		FragColor = vec4(0);
 	}
 	else
 	{ 		
 		FragColor = vec4(1);
-	}*/
+	}
 
+}
 
-	FragColor = vec4(sin(v_Tex.x*10*3.141592));
+void Line()
+{
+	//FragColor = vec4(v_Tex.xy, 0, 1);
+	FragColor = vec4(abs(sin(v_Tex.x * 10 * PI)));
+}
 
+void main()
+{
+	Line();
+	//FragColor = vec4(sin(v_Tex.x));
 
 }
