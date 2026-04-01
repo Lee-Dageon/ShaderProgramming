@@ -3,6 +3,8 @@
 layout(location=0) out vec4 FragColor;
 in vec2 v_Tex;
 
+uniform float u_Time;
+
 const float PI = 3.141592;
 
 void Simple()
@@ -52,8 +54,8 @@ void Circles()
 	float dist = distance(center, v_Tex);
 	float width = 0.01;
 	float radius = 0.5;
-	float count = 100;
-	float gray = pow(abs(sin(dist * count* PI)), 32);
+	float count = 10;
+	float gray = pow(abs(sin(dist * count * PI - u_Time*10)), 32);
 
 
 	FragColor = vec4(gray);
