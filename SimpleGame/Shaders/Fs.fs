@@ -33,17 +33,17 @@ void Circle()
 {
 	vec2 center = vec2(0.5, 0.5);
 	float dist = distance(center, v_Tex);
+	float width =0.01;
+	float radius = 0.5;
 
-	FragColor = vec4(dist);
-
-	/*if(dist < 0.5)
+	if(dist > (radius - width) && dist < radius)
 	{
 		FragColor = vec4(1);
 	}
 	else
 	{
 		FragColor = vec4(0);
-	}*/
+	}
 }
 
 
