@@ -61,14 +61,15 @@ void RainDrop()
 		float newTime = u_Time - startTime;	// 0~1
 		if(newTime > 0)
 		{
-			float t = fract(newTime);
+			float t = fract(newTime/lifeTime);
 			float oneMinus = 1 - t;	// 1~0 °¨¼Ò
+			t = t * lifeTime;	// 0~lifeTime
 			vec2 center = c_Points[i].xy;
 			//vec2 center = vec2(0.5, 0.5);
 			vec2 currPos = v_Tex;
 			float dist = distance(center, currPos);
 			float count = 20;
-			float range = t/3;
+			float range = t/2;
 
 			float fade = (1/range) * clamp(range - dist, 0, 1);
 			float grey = pow(abs(sin(dist * count * PI - t*5)), 32);
