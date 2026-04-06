@@ -70,10 +70,10 @@ void RainDrop()
 			vec2 currPos = v_Tex;
 			float dist = distance(center, currPos);
 			float count = 20;
-			float range = t/5;
+			float range = t/4;
 
 			float fade = (1/range) * clamp(range - dist, 0, 1);
-			float grey = pow(abs(sin(dist * count * PI - t*50)), 32);
+			float grey = pow(abs(sin(dist * count * PI - t*100)), 32);
 			accum += grey * fade * oneMinus;
 		}
 	}	
