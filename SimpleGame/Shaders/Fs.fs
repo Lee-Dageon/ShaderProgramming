@@ -4,6 +4,7 @@ layout(location=0) out vec4 FragColor;
 in vec2 v_Tex;
 
 uniform float u_Time;
+uniform vec4 u_Points[500];
 
 const float PI = 3.141592;
 
@@ -54,25 +55,25 @@ void RainDrop()
 {
 	float accum = 0;
 
-	for (int i=0; i<2; i++)
+	for (int i=0; i<500; i++)
 	{
-		float startTime = c_Points[i].z;
-		float lifeTime = c_Points[i].w;
-		float newTime = u_Time - startTime;	// 0~1
+		float startTime = u_Points[i].z;
+		float lifeTime = u_Points[i].w;
+		float newTime = u_Time - startTime;
 		if(newTime > 0)
 		{
-			float t = fract(newTime/lifeTime);
+			float t = fract(newTime/lifeTime); // 0~1 반복
 			float oneMinus = 1 - t;	// 1~0 감소
 			t = t * lifeTime;	// 0~lifeTime
-			vec2 center = c_Points[i].xy;
+			vec2 center = u_Points[i].xy;
 			//vec2 center = vec2(0.5, 0.5);
 			vec2 currPos = v_Tex;
 			float dist = distance(center, currPos);
 			float count = 20;
-			float range = t/2;
+			float range = t/5;
 
 			float fade = (1/range) * clamp(range - dist, 0, 1);
-			float grey = pow(abs(sin(dist * count * PI - t*5)), 32);
+			float grey = pow(abs(sin(dist * count * PI - t*50)), 32);
 			accum += grey * fade * oneMinus;
 		}
 	}	

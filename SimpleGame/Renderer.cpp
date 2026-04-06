@@ -25,6 +25,21 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	
 	GenParticles(5000);
 
+	int index = 0;
+	for (int i = 0; i < 500; i++)
+	{
+		float x = (float)rand() / (float)RAND_MAX;
+		float y = (float)rand() / (float)RAND_MAX;
+		float sTime = 5.f*(float)rand() / (float)RAND_MAX;
+		float lTime = 0.5f*(float)rand() / (float)RAND_MAX;
+		m_RainInfo[index] = x; index++;
+		m_RainInfo[index] = y; index++;
+		m_RainInfo[index] = sTime; index++;
+		m_RainInfo[index] = lTime; index++;
+
+	}
+
+
 	//Create VBOs
 	CreateVertexBufferObjects();
 
@@ -450,6 +465,9 @@ void Renderer::DrawFS()
 
 	int uTime = glGetUniformLocation(m_FSShader, "u_Time");
 	glUniform1f(uTime, gTime);
+
+	int uPoints = glGetUniformLocation(m_FSShader, "u_Points");
+	glUniform4fv(uPoints, 500, m_RainInfo);
 
 	//stride ¼³Á¤
 	int attribPosition = glGetAttribLocation(m_FSShader,

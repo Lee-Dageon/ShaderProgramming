@@ -44,5 +44,9 @@ private:
 
 	GLuint m_VBOFS = 0;
 	GLuint m_FSShader = 0;
+
+	//RainDrop
+	float m_RainInfo[500 * 4];
+
 };
 
