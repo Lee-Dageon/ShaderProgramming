@@ -51,19 +51,18 @@ void Circle()
 void RainDrop()
 {
 	float newTime = fract(u_Time);	// 0~1
+	float oneMinus = 1 - newTime;	// 1~0 °¨¼Ò
 
 	vec2 center = vec2(0.5, 0.5);
 	vec2 currPos = v_Tex;
 	float dist = distance(center, currPos);
-	float width = 0.01;
-	float radius = 0.5;
 	float count = 15;
-	float range = newTime;
+	float range = newTime/2;
 
 	float fade = (1/range) * clamp(range - dist, 0, 1);
-	float grey = fade * pow(abs(sin(dist * count * PI - u_Time*5)), 32);
+	float grey = pow(abs(sin(dist * count * PI - u_Time*5)), 32);
 
-	FragColor = vec4(grey);
+	FragColor = vec4(grey * fade * oneMinus);
 }
 
 void Circles()
