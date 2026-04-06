@@ -7,7 +7,7 @@ uniform float u_Time;
 
 const float PI = 3.141592;
 
-const vec2 c_Points[2] = vec2[2](vec2(0.5, 0.5), vec2(0.5, 0.7));
+const vec4 c_Points[2] = vec4[2](vec4(0.5, 0.5, 0, 0.5), vec4(0.5, 0.7, 0.5, 1));
 
 void Simple()
 {
@@ -56,21 +56,28 @@ void RainDrop()
 
 	for (int i=0; i<2; i++)
 	{
-		float newTime = fract(u_Time);	// 0~1
-		float oneMinus = 1 - newTime;	// 1~0 감소
-		vec2 center = c_Points[i];
-		//vec2 center = vec2(0.5, 0.5);
-		vec2 currPos = v_Tex;
-		float dist = distance(center, currPos);
-		float count = 20;
-		float range = newTime/3;
+		float startTime = c_Points[i].z;
+		float lifeTime = c_Points[i].w;
+		float newTime = u_Time - startTime;	// 0~1
+		if(newTime > 0)
+		{
+			float t = fract(newTime);
+			float oneMinus = 1 - t;	// 1~0 감소
+			vec2 center = c_Points[i].xy;
+			//vec2 center = vec2(0.5, 0.5);
+			vec2 currPos = v_Tex;
+			float dist = distance(center, currPos);
+			float count = 20;
+			float range = t/3;
 
-		float fade = (1/range) * clamp(range - dist, 0, 1);
-		float grey = pow(abs(sin(dist * count * PI - u_Time*5)), 32);
-		accum += grey * fade * oneMinus;
-		FragColor = vec4(accum);
-	}
+			float fade = (1/range) * clamp(range - dist, 0, 1);
+			float grey = pow(abs(sin(dist * count * PI - t*5)), 32);
+			accum += grey * fade * oneMinus;
+		}
+	}	
+	FragColor = vec4(accum);
 }
+
 
 void Circles()
 {
