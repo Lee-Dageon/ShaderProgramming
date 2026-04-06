@@ -48,6 +48,22 @@ void Circle()
 	}
 }
 
+void RainDrop()
+{
+	vec2 center = vec2(0.5, 0.5);
+	vec2 currPos = v_Tex;
+	float dist = distance(center, currPos);
+	float width = 0.01;
+	float radius = 0.5;
+	float count = 15;
+	float range = 0.2;
+
+	float fade = (1/range) * clamp(range - dist, 0, 1);
+	float grey = fade * pow(abs(sin(dist * count * PI - u_Time*5)), 32);
+
+	FragColor = vec4(grey);
+}
+
 void Circles()
 {
 	vec2 center = vec2(0.5, 0.5);
@@ -69,14 +85,12 @@ void Circles()
 	{
 		FragColor = vec4(0);
 	}*/
-
-
 }
 
 
 void main()
 {
-	Circles();
+	RainDrop();
 	//FragColor = vec4(sin(v_Tex.x));
 
 }
