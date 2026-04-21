@@ -106,7 +106,7 @@ void Circles()
 
 void main()
 {
-	float sinValue = sin(v_Tex.x * PI * 2);
+	float sinValue = 0.5 * ((sin(v_Tex.x * PI * 2)+1) / 2);
 	float grey = 0;
 	if(v_Tex.y < sinValue)
 	{
