@@ -106,9 +106,9 @@ void Circles()
 
 void main()
 {
-	float amp = 0.1;
-	float sinInput = v_Tex.x * PI * 2 - u_Time;
-	float sinValue = amp*(((sin(sinInput) + 1) / 2) - 0.5)+0.5;
+	float amp = 0.4;
+	float sinInput = v_Tex.x * PI * 2 - (u_Time * 20);
+	float sinValue = v_Tex.x * amp*(((sin(sinInput) + 1) / 2) - 0.5)+0.5;
 	float width = 0.3;
 	float grey = 0;
 
