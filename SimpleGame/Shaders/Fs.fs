@@ -50,7 +50,7 @@ void Circle()
 		FragColor = vec4(0);
 	}
 }
-
+  
 void RainDrop()
 {
 	float accum = 0;
@@ -104,10 +104,18 @@ void Circles()
 	}*/
 }
 
-
 void main()
 {
-	RainDrop();
-	//FragColor = vec4(sin(v_Tex.x));
-
+	float sinValue = sin(v_Tex.x * PI * 2);
+	float grey = 0;
+	if(v_Tex.y < sinValue)
+	{
+		grey = 1;
+	}
+	else
+	{
+		grey = 0;
+		discard;
+	}
+	FragColor = vec4(grey);
 }
