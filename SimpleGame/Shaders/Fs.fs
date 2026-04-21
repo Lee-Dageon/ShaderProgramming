@@ -3,7 +3,7 @@
 layout(location=0) out vec4 FragColor;
 in vec2 v_Tex;
 
-uniform float u_Time;
+uniform float u_Time; // 현재 시간 (초 단위)
 uniform vec4 u_Points[500];
 
 const float PI = 3.141592;
@@ -106,7 +106,9 @@ void Circles()
 
 void main()
 {
-	float sinValue = 0.5*(((sin(v_Tex.x * PI * 2)+1) / 2) - 0.5)+0.5;
+	float amp = 0.5;
+	float sinInput = v_Tex.x * PI * 2 - u_Time;
+	float sinValue = amp*(((sin(sinInput) + 1) / 2) - 0.5)+0.5;
 	float grey = 0;
 	if(v_Tex.y < sinValue)
 	{
