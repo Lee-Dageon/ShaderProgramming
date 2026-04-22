@@ -117,8 +117,16 @@ void Flame()
 	float fWidth = 0.0;
 	float width = 0.5 * mix(fWidth, 1, newY);
 
+	// 중심축(sinValue)으로부터의 거리 계산
+	float distFromCenter = abs(v_Tex.x - sinValue);
+
+	// newY가 0에 가까워질수록 갈라지는 틈의 크기를 결정
+	float split = newY * width * 0.1; 
 
 	if(v_Tex.x < sinValue + width/2 && v_Tex.x > sinValue - width/2)
+	
+	// 중심 거리(distFromCenter)가 split보다 크고 전체 너비의 절반보다 작을 때만 표시
+	if(distFromCenter < width/2 && distFromCenter > split)
 	{
 		grey = 1;
 	} 
