@@ -106,16 +106,21 @@ void Circles()
 
 void main()
 {
-	float amp = 0.4;
-	float sinInput = v_Tex.x * PI * 2 - (u_Time * 20);
+	float amp = 0.5;
+	float speed = 30;
+	float sinInput = v_Tex.x * PI * 2 - (u_Time * speed);
 	float sinValue = v_Tex.x * amp*(((sin(sinInput) + 1) / 2) - 0.5)+0.5;
-	float width = ((1.0 - v_Tex.x) * 0.3) + 0.3;
+	
 	float grey = 0;
+
+	float fWidth = 0.0;
+	float width = 0.5 * mix(1, fWidth, v_Tex.x);
+
 
 	if(v_Tex.y < sinValue + width/2 && v_Tex.y > sinValue - width/2)
 	{
 		grey = 1;
-	}
+	} 
 	else
 	{
 		grey = 0;
