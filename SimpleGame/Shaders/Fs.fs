@@ -194,7 +194,22 @@ void TextureQ2()
 	FragColor =	texture(u_Texture, tex);
 }
 
+void TextureQ3()
+{
+	// x: 0~1, 0~1, 0~1 
+	// fract(0~1) * 3
+
+	float tx = fract(v_Tex.x*3);
+	float ty = v_Tex.y / 3;
+	
+	float offsetX = 0;
+	float offsetY = floor(v_Tex.x * 3)/3;
+
+	vec2 tex = vec2(offsetX + tx, offsetY + ty);
+	FragColor =	texture(u_Texture, tex);
+}
+
 void main()
 {
-	TextureQ2();
+	TextureQ3();
 }
