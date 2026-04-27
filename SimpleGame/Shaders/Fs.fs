@@ -170,7 +170,26 @@ void Flag()
 	FragColor = vec4(grey);
 }
 
+void TextureQ1()
+{
+	float tx = v_Tex.x;
+	float ty = v_Tex.y;
+
+	float TY = ty * 2;
+
+	if (ty < 0.5)
+	{
+		ty =  TY;
+	}
+	else
+	{
+		ty = 1- TY;
+	}
+	vec2 tex = vec2(tx, ty);
+	FragColor =	texture(u_Texture, tex);
+}
+
 void main()
 {
-	FragColor = texture(u_Texture, v_Tex);
+	TextureQ1();
 }
