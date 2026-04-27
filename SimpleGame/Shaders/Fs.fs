@@ -179,7 +179,19 @@ void TextureQ1()
 	FragColor =	texture(u_Texture, tex);
 }
 
+void TextureQ2()
+{
+	// x: 0~1, 0~1, 0~1 
+	// fract(0~1) * 3
+
+	float tx = fract(v_Tex.x*3);
+	float ty = v_Tex.y / 3;
+
+	vec2 tex = vec2(tx, ty);
+	FragColor =	texture(u_Texture, tex);
+}
+
 void main()
 {
-	TextureQ1();
+	TextureQ2();
 }
