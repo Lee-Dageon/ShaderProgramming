@@ -171,5 +171,5 @@ void Flag()
 
 void main()
 {
-	Flame();
+	RainDrop();
 }

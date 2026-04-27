@@ -24,6 +24,9 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_TriangleShader = CompileShaders("./Shaders/triangle.vs", "./Shaders/triangle.fs");
 	m_FSShader = CompileShaders("./Shaders/FS.vs", "./Shaders/FS.fs");
 	
+	// Load Textures
+	m_RgbTexture = CreatePngTexture("./png/rgb.png", GL_LINEAR);
+
 	GenParticles(5000);
 
 	int index = 0;
@@ -75,7 +78,7 @@ GLuint Renderer::CreatePngTexture(char* filePath, GLuint samplingMethod)
 	glGenTextures(1, &temp);
 	glBindTexture(GL_TEXTURE_2D, temp);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
-
+		 
 	GL_UNSIGNED_BYTE, &image[0]);
 
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, samplingMethod);
