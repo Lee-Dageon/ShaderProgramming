@@ -5,6 +5,7 @@ in vec2 v_Tex;
 
 uniform float u_Time; // 현재 시간 (초 단위)
 uniform vec4 u_Points[500];
+uniform sampler2D u_Texture;
 
 const float PI = 3.141592;
 
@@ -171,5 +172,5 @@ void Flag()
 
 void main()
 {
-	RainDrop();
+	FragColor = texture(u_Texture, v_Tex);
 }

@@ -502,6 +502,12 @@ void Renderer::DrawFS()
 	int uPoints = glGetUniformLocation(m_FSShader, "u_Points");
 	glUniform4fv(uPoints, 500, m_RainInfo);
 
+	// Texture Binding
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_RgbTexture);
+	int uTexLoc = glGetUniformLocation(m_FSShader, "u_Texture");
+	glUniform1i(uTexLoc, 0);
+
 	//stride ¼³Á¤
 	int attribPosition = glGetAttribLocation(m_FSShader,
 		"a_Pos");
