@@ -173,18 +173,8 @@ void Flag()
 void TextureQ1()
 {
 	float tx = v_Tex.x;
-	float ty = v_Tex.y;
+	float ty = 1-abs((v_Tex.y * 2) -1);
 
-	float TY = ty * 2;
-
-	if (ty < 0.5)
-	{
-		ty =  TY;
-	}
-	else
-	{
-		ty = 1- TY;
-	}
 	vec2 tex = vec2(tx, ty);
 	FragColor =	texture(u_Texture, tex);
 }
