@@ -23,7 +23,16 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_SolidRectShader = CompileShaders("./Shaders/SolidRect.vs", "./Shaders/SolidRect.fs");
 	m_TriangleShader = CompileShaders("./Shaders/triangle.vs", "./Shaders/triangle.fs");
 	m_FSShader = CompileShaders("./Shaders/FS.vs", "./Shaders/FS.fs");
-	
+
+	//Load Textures
+	m_RgbTexture = CreatePngTexture("./png/rgb.png", GL_NEAREST);
+	m_NumsTexture = CreatePngTexture("./png/Numbers.png", GL_NEAREST);
+	for (int i = 0; i < 10; i++)
+	{
+		std::string filePath = "./png/" + std::to_string(i) + ".png";
+		m_NumTexture[i] = CreatePngTexture((char*)filePath.c_str(), GL_NEAREST);
+	}
+
 	GenParticles(5000);
 
 	int index = 0;
@@ -37,9 +46,7 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 		m_RainInfo[index] = y; index++;
 		m_RainInfo[index] = sTime; index++;
 		m_RainInfo[index] = lTime; index++;
-
 	}
-
 
 	//Create VBOs
 	CreateVertexBufferObjects();
@@ -495,6 +502,12 @@ void Renderer::DrawFS()
 
 	int uTime = glGetUniformLocation(m_FSShader, "u_Time");
 	glUniform1f(uTime, gTime);
+
+	int uRGBTex = glGetUniformLocation(m_FSShader, "u_RGBTex");
+	glUniform1i(uTime, 0);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_RgbTexture);
 
 	int uPoints = glGetUniformLocation(m_FSShader, "u_Points");
 	glUniform4fv(uPoints, 500, m_RainInfo);

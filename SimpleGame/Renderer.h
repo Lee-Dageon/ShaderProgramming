@@ -46,6 +46,11 @@ private:
 	GLuint m_VBOFS = 0;
 	GLuint m_FSShader = 0;
 
+	//Textures
+	GLuint m_RgbTexture = 0;
+	GLuint m_NumTexture[10];
+	GLuint m_NumsTexture = 0;
+
 	//RainDrop
 	float m_RainInfo[500 * 4];
 
