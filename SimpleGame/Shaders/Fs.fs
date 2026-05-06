@@ -211,11 +211,15 @@ void TextureQ3()
 
 void TextureQ4()
 {
-	float offsetX = fract((ceil(v_Tex.y * 2))*0.5);	//offset
+	float resolX = 5;
+	float resolY = 5;
+	float shear = 0.5 * -u_Time;
+
+	float offsetX = fract((ceil(v_Tex.y * resolY))*shear);	//offset
 	float offsetY = 0;
 
-	float tx = fract(v_Tex.x * 2 + offsetX);	//range
-	float ty = fract(v_Tex.y * 2 + offsetY);
+	float tx = fract(v_Tex.x * resolX + offsetX);	//range
+	float ty = fract(v_Tex.y * resolY + offsetY);
 	
 	vec2 tex = vec2(tx, ty);
 	FragColor =	texture(u_Texture, tex);
