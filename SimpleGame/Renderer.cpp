@@ -25,7 +25,14 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_FSShader = CompileShaders("./Shaders/FS.vs", "./Shaders/FS.fs");
 	
 	// Load Textures
-	m_RgbTexture = CreatePngTexture("./png/rgb.png", GL_LINEAR);
+	m_RgbTexture = CreatePngTexture("./png/rgb.png", GL_NEAREST);	// 0 slot
+	m_NumsTexture = CreatePngTexture("./png/Numbers.png", GL_NEAREST);	// 1 slot
+
+	for (int i = 0; i < 10; i++)
+	{
+		std::string path = "./png/" + std::to_string(i) + ".png";
+		m_NumTexture[i] = CreatePngTexture((char*)path.c_str(), GL_NEAREST);	// 2~11 slot
+	}
 
 	GenParticles(5000);
 
@@ -503,10 +510,45 @@ void Renderer::DrawFS()
 	glUniform4fv(uPoints, 500, m_RainInfo);
 
 	// Texture Binding
+	int uRGBTexture = glGetUniformLocation(m_FSShader, "u_Texture");
+	glUniform1i(uRGBTexture, 11);
+
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_RgbTexture);
-	int uTexLoc = glGetUniformLocation(m_FSShader, "u_Texture");
-	glUniform1i(uTexLoc, 0);
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, m_NumTexture[0]);
+
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, m_NumTexture[1]);
+
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, m_NumTexture[2]);
+
+	glActiveTexture(GL_TEXTURE4);
+	glBindTexture(GL_TEXTURE_2D, m_NumTexture[3]);
+
+	glActiveTexture(GL_TEXTURE5);
+	glBindTexture(GL_TEXTURE_2D, m_NumTexture[4]);
+
+	glActiveTexture(GL_TEXTURE6);
+	glBindTexture(GL_TEXTURE_2D, m_NumTexture[5]);
+
+	glActiveTexture(GL_TEXTURE7);
+	glBindTexture(GL_TEXTURE_2D, m_NumTexture[6]);
+
+	glActiveTexture(GL_TEXTURE8);
+	glBindTexture(GL_TEXTURE_2D, m_NumTexture[7]);
+
+	glActiveTexture(GL_TEXTURE9);
+	glBindTexture(GL_TEXTURE_2D, m_NumTexture[8]);
+
+	glActiveTexture(GL_TEXTURE10);
+	glBindTexture(GL_TEXTURE_2D, m_NumTexture[9]);
+
+	glActiveTexture(GL_TEXTURE11);
+	glBindTexture(GL_TEXTURE_2D, m_NumsTexture);
+	
 
 	//stride ¼³Á¤
 	int attribPosition = glGetAttribLocation(m_FSShader,
