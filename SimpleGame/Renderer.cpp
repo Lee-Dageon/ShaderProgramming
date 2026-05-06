@@ -511,9 +511,14 @@ void Renderer::DrawFS()
 
 	// Texture Binding
 	int uRGBTexture = glGetUniformLocation(m_FSShader, "u_Texture");
-	glUniform1i(uRGBTexture, 11);
+	glUniform1i(uRGBTexture, 0);
+
+	// Texture Binding
+	int uCurrentNumTex = glGetUniformLocation(m_FSShader, "u_CurrentNumTex");
+	glUniform1i(uCurrentNumTex, 3);
 
 	glActiveTexture(GL_TEXTURE0);
+
 	glBindTexture(GL_TEXTURE_2D, m_RgbTexture);
 
 	glActiveTexture(GL_TEXTURE1);
