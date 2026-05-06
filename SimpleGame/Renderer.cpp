@@ -527,7 +527,7 @@ void Renderer::DrawFS()
 	Sleep(100);
 
 	int uInputNum = glGetUniformLocation(m_FSShader, "u_InputNum");
-	glUniform1i(uInputNum, 6);
+	glUniform1i(uInputNum, g_CurrNum);
 
 	int uNumsTexture = glGetUniformLocation(m_FSShader, "u_NumsTex");
 	glUniform1i(uNumsTexture, 11);
