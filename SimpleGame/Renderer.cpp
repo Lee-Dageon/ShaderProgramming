@@ -2,6 +2,7 @@
 #include "Renderer.h"
 #include "LoadPng.h"
 #include <assert.h>
+#include <windows.h>
 
 Renderer::Renderer(int windowSizeX, int windowSizeY)
 {
@@ -497,6 +498,8 @@ void Renderer::GenParticles(int num)
 	m_VBOParticleCount = num * 6;
 }
 
+int g_CurrNum = 0;
+
 void Renderer::DrawFS()
 {
 	gTime += 0.0001f;
@@ -515,7 +518,13 @@ void Renderer::DrawFS()
 
 	// Texture Binding
 	int uCurrentNumTex = glGetUniformLocation(m_FSShader, "u_CurrentNumTex");
-	glUniform1i(uCurrentNumTex, 3);
+	glUniform1i(uCurrentNumTex, g_CurrNum + 1);
+	g_CurrNum++;
+	if (g_CurrNum > 9)
+	{
+		g_CurrNum = 0;
+	}
+	Sleep(100);
 
 	glActiveTexture(GL_TEXTURE0);
 
