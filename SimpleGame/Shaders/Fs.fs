@@ -7,6 +7,8 @@ uniform float u_Time; // 현재 시간 (초 단위)
 uniform vec4 u_Points[500];
 uniform sampler2D u_Texture;
 uniform sampler2D u_CurrentNumTex;
+uniform sampler2D u_NumsTex;
+uniform int u_InputNum;
 
 const float PI = 3.141592;
 
@@ -238,7 +240,20 @@ void Num()
 	FragColor =	texture(u_CurrentNumTex, tex);
 }
 
+void Nums()
+{
+	float index = float(u_InputNum);
+	float tx = v_Tex.x / 5;
+	float ty = v_Tex.y / 2;
+	
+	float offsetX = fract(index/5.0);
+	float offsetY = floor(index/5.0)/2.0;
+
+	vec2 tex = vec2(offsetX + tx, offsetY + ty);
+	FragColor =	texture(u_NumsTex, tex);
+}
+
 void main()
 {
-	Num();
+	Nums();
 }

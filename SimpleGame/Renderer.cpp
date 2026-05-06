@@ -517,8 +517,8 @@ void Renderer::DrawFS()
 	glUniform1i(uRGBTexture, 0);
 
 	// Texture Binding
-	int uCurrentNumTex = glGetUniformLocation(m_FSShader, "u_CurrentNumTex");
-	glUniform1i(uCurrentNumTex, g_CurrNum + 1);
+	int uCurrNumTexture = glGetUniformLocation(m_FSShader, "u_CurrentNumTex");
+	glUniform1i(uCurrNumTexture, g_CurrNum + 1);
 	g_CurrNum++;
 	if (g_CurrNum > 9)
 	{
@@ -526,8 +526,14 @@ void Renderer::DrawFS()
 	}
 	Sleep(100);
 
-	glActiveTexture(GL_TEXTURE0);
+	int uInputNum = glGetUniformLocation(m_FSShader, "u_InputNum");
+	glUniform1i(uInputNum, 6);
 
+	int uNumsTexture = glGetUniformLocation(m_FSShader, "u_NumsTex");
+	glUniform1i(uNumsTexture, 11);
+
+	glActiveTexture(GL_TEXTURE0);
+	 
 	glBindTexture(GL_TEXTURE_2D, m_RgbTexture);
 
 	glActiveTexture(GL_TEXTURE1);
