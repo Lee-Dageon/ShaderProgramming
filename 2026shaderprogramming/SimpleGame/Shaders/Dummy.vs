@@ -7,8 +7,11 @@ out float v_Grey;
 
 void main()
 {
+	float value = a_Pos.x + 0.5; // 0~1
+
 	float newX = a_Pos.x + 0;
-	float newY = a_Pos.y + 0.25 * sin((a_Pos.x+0.5)*2*c_PI - u_Time);
+	float newY = a_Pos.y + 
+			value * 0.25 * sin((a_Pos.x+0.5)*2*c_PI - u_Time);
 
 	vec4 newPosition = vec4(newX, newY, 0.0, 1.0);
 
