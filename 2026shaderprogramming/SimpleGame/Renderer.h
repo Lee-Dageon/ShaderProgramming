@@ -28,7 +28,7 @@ private:
 	void CreateVertexBufferObjects();
 	void GetGLPosition(float x, float y, float *newX, float *newY);
 	void GenParticles(int count);
-	void GenDummyMesh();
+	void GenDummyMesh(int rX, int rY);
 	GLuint CreatePngTexture(char* filePath, GLuint samplingMethod);
 
 	bool m_Initialized = false;

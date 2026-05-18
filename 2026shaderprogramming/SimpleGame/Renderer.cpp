@@ -53,7 +53,7 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 
 	GenParticles(1000);
 
-	GenDummyMesh();
+	GenDummyMesh(8, 8);
 
 	//Gen Drop Info
 	int index = 0;
@@ -331,15 +331,15 @@ void Renderer::GenParticles(int count)
 	m_VBOParticleCount = count * verticesPerParticle;
 }
 
-void Renderer::GenDummyMesh()
+void Renderer::GenDummyMesh(int rX, int rY)
 {
 	float basePosX = -0.5f;
 	float basePosY = -0.5f;
 	float targetPosX = 0.5f;
-
 	float targetPosY = 0.5f;
-	int pointCountX = 8;
-	int pointCountY = 8;
+
+	int pointCountX = rX;
+	int pointCountY = rY;
 	float width = targetPosX - basePosX;
 	float height = targetPosY - basePosY;
 
