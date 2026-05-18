@@ -253,7 +253,45 @@ void Nums()
 	FragColor =	texture(u_NumsTex, tex);
 }
 
+
+void Q6()
+{
+	float tx = v_Tex.x;
+	float ty = v_Tex.y;
+	
+	float offsetX = 0;
+	float offsetY = fract(floor(v_Tex.y * 3)/3);
+
+	vec2 tex = vec2(offsetX + tx, offsetY + ty);
+	FragColor =	texture(u_Texture, tex);
+}
+
+void Q7()
+{
+	float tx = fract(v_Tex.x * 3);
+	float ty = v_Tex.y/3;
+	
+	float offsetX = 0;
+	float offsetY = mod(ceil(v_Tex.x * 3), 3)/3;
+
+	vec2 tex = vec2(offsetX + tx, offsetY + ty);
+	FragColor =	texture(u_Texture, tex);
+}
+
+void Q7()
+{
+	float tx = v_Tex.x / 5;
+	float ty = v_Tex.y / 2;
+	
+	float offsetX = 0;
+	float offsetY = 0;
+
+	vec2 tex = vec2(offsetX + tx, offsetY + ty);
+	FragColor =	texture(u_NumsTex, tex);
+}
+
+
 void main()
 {
-	Nums();
+	Q7();
 }

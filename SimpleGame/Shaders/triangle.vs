@@ -123,6 +123,8 @@ void Thrust()
 	}
 }
 
+void
+
 void main()
 {
 	Thrust();
