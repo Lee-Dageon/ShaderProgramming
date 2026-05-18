@@ -777,11 +777,10 @@ void Renderer::DrawFS()
 
 void Renderer::DrawDummy()
 {
-	//Program select
 	int shader = m_DummyShader;
 	glUseProgram(shader);
 
-	int aPos = glGetAttribLocation(shader, "a_Pos");
+	int aPos = glGetAttribLocation(shader, "a_Pos");	
 	glEnableVertexArrayAttrib(shader, aPos);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBODummy);
 	glVertexAttribPointer(aPos, 
