@@ -334,29 +334,17 @@ void Renderer::GenParticles(int count)
 void Renderer::GenDummyMesh()
 {
 	float basePosX = -0.5f;
-
 	float basePosY = -0.5f;
-
 	float targetPosX = 0.5f;
 
 	float targetPosY = 0.5f;
-
-
-
 	int pointCountX = 8;
-
 	int pointCountY = 8;
-
 	float width = targetPosX - basePosX;
-
 	float height = targetPosY - basePosY;
 
-
-
 	float* point = new float[pointCountX * pointCountY * 2];
-
 	float* vertices = new float[(pointCountX - 1) * (pointCountY - 1) * 2 * 3 * 3];
-
 	m_VBODummyCount = (pointCountX - 1) * (pointCountY - 1) * 2 * 3;
 
 
@@ -780,8 +768,11 @@ void Renderer::DrawDummy()
 	int shader = m_DummyShader;
 	glUseProgram(shader);
 
+	int uTime = glGetUniformLocation(shader, "u_Time");
+	glUniform1f(uTime, g_time);
+
 	int aPos = glGetAttribLocation(shader, "a_Pos");	
-	glEnableVertexArrayAttrib(shader, aPos);
+	glEnableVertexAttribArray(aPos);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBODummy);
 	glVertexAttribPointer(aPos, 
 		3, 
