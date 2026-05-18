@@ -53,7 +53,7 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 
 	GenParticles(1000);
 
-	GenDummyMesh(8, 8);
+	GenDummyMesh(500, 500);
 
 	//Gen Drop Info
 	int index = 0;
@@ -765,11 +765,16 @@ void Renderer::DrawFS()
 
 void Renderer::DrawDummy()
 {
+	g_time += 0.001f;
+
 	int shader = m_DummyShader;
 	glUseProgram(shader);
 
 	int uTime = glGetUniformLocation(shader, "u_Time");
 	glUniform1f(uTime, g_time);
+
+	int uColorLoc = glGetUniformLocation(shader, "u_Color");
+	glUniform4f(uColorLoc, 1.0f, 1.0f, 1.0f, 1.0f);
 
 	int aPos = glGetAttribLocation(shader, "a_Pos");	
 	glEnableVertexAttribArray(aPos);
@@ -781,7 +786,7 @@ void Renderer::DrawDummy()
 		sizeof(float) * 3, 
 		0);
 
-	glDrawArrays(GL_LINE_STRIP, 0, m_VBODummyCount);
+	glDrawArrays(GL_TRIANGLES, 0, m_VBODummyCount);
 }
 
 void Renderer::GetGLPosition(float x, float y, float *newX, float *newY)
