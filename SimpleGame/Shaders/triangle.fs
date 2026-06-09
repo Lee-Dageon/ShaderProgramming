@@ -9,5 +9,12 @@ in vec2 v_Tex;
 void main()
 {
 	float d = distance(vec2(0.5, 0.5), v_Tex);
-	FragColor = vec4(d);
+	if (d < 0.5)
+	{
+		FragColor = vec4(1);
+	}
+	else
+	{
+		FragColor = vec4(0);
+	}
 }
