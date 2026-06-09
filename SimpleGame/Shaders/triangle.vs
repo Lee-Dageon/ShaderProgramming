@@ -140,10 +140,11 @@ void Shape()
 		float t = fract(newTime/lifeTime) * lifeTime;	// 0~lifeTime
 		float tt = t*t;
 
-		float newX = a_Position.x + a_Vel.x*t;
-		float newY = a_Position.y + a_Vel.y*t;
+		float newX = a_Position.x + a_Vel.x*t * 0.1;
+		float newY = a_Position.y + a_Vel.y*t * 0.1;
 
 		gl_Position = vec4(newX, newY, 0, 1);
+		v_Grey = 1 - fract(newTime/lifeTime);	// 시간이 지날수록 어두워짐
 	}
 	else
 	{
