@@ -7,6 +7,7 @@ in vec3 v_Color;
 in vec2 v_Tex;
 
 uniform sampler2D u_ParticlesTex;
+uniform sampler2D u_ParticleSpriteTex;
 
 void CircleShape()
 {
@@ -26,7 +27,21 @@ void SingleTexture()
 	FragColor = v_Grey * texture(u_ParticlesTex, v_Tex);
 }
 
+void AnimTexture()
+{
+	float resolX = 9.0;
+	float resolY = 9.0;
+	float index = 10;
+	float tx = v_Tex.x / resolX;
+	float ty = v_Tex.y / resolY;
+	float offsetX = fract(index / resolX);
+	float offsetY = floor(index/resolX)/resolY;
+
+	vec2 tex = vec2(tx + offsetX, ty + offsetY);
+	FragColor = v_Grey * texture(u_ParticleSpriteTex, tex);
+}
+
 void main()
 {
-	SingleTexture();
+	AnimTexture();
 }
