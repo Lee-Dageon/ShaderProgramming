@@ -38,7 +38,11 @@ void AnimTexture()
 	float offsetY = floor(index/resolX)/resolY;
 
 	vec2 tex = vec2(tx + offsetX, ty + offsetY);
+	float d = distance(vec2(0.5, 0.5), v_Tex);
+
+	float value = clamp(0.5 - d, 0, 0.5)*2.0;
 	FragColor = v_Grey * texture(u_ParticleSpriteTex, tex);
+	FragColor.a *= value;
 }
 
 void main()
