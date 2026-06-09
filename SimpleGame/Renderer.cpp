@@ -348,7 +348,7 @@ void Renderer::GetGLPosition(float x, float y, float* newX, float* newY)
 
 void Renderer::GenParticles(int num)
 {
-	// particle 데이터 (총 11개의 float)
+	// particle 데이터 (총 14개의 float)
 	struct Vertex
 	{
 		float x, y, z;
