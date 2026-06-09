@@ -153,9 +153,9 @@ void Shape()
 	else
 	{
 		gl_Position = vec4(-10000,0,0,1);
+		v_Grey = 1;
 	}
 
-	v_Grey = 1;
 	v_Color = a_RGB;
 	v_Tex = a_Tex;
 

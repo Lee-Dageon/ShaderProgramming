@@ -6,6 +6,8 @@ in float v_Grey;
 in vec3 v_Color;
 in vec2 v_Tex;
 
+uniform sampler2D u_ParticlesTex;
+
 void CircleShape()
 {
 	float d = distance(vec2(0.5, 0.5), v_Tex);
@@ -19,7 +21,12 @@ void CircleShape()
 	}
 }
 
+void SingleTexture()
+{
+	FragColor = v_Grey * texture(u_ParticlesTex, v_Tex);
+}
+
 void main()
 {
-	CircleShape();
+	SingleTexture();
 }

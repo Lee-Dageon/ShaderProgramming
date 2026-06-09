@@ -27,6 +27,8 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	//Load Textures
 	m_RgbTexture = CreatePngTexture("./png/rgb.png", GL_NEAREST);
 	m_NumsTexture = CreatePngTexture("./png/Numbers.png", GL_NEAREST);
+	m_ParticleTexture = CreatePngTexture("./png/particle.png", GL_NEAREST);
+	
 	for (int i = 0; i < 10; i++)
 	{
 		std::string filePath = "./png/" + std::to_string(i) + ".png";
@@ -437,6 +439,11 @@ void Renderer::DrawParticles()
 	int uTime = glGetUniformLocation(m_TriangleShader, "u_Time");
 	glUniform1f(uTime, gTime); // gTime은 Renderer.cpp 전역 변수
 
+	int uParticle = glGetUniformLocation(m_TriangleShader, "u_ParticleTex");
+	glUniform1i(uParticle, 0); // 텍스처 유닛 0에 바인딩
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_ParticleTexture);
+
 	// attribute 위치 가져오기 (셰이더에 정의된 이름과 매칭)
 	int attribPosition = glGetAttribLocation(m_TriangleShader, "a_Position");
 	int attribMass = glGetAttribLocation(m_TriangleShader, "a_Mass");
@@ -530,6 +537,7 @@ void Renderer::DrawParticles()
 	glDisableVertexAttribArray(attribRV);
 	glDisableVertexAttribArray(attribRV1);
 	glDisableVertexAttribArray(attribRV2);
+	glDisableVertexAttribArray(attribTex);
 
 	glDisable(GL_BLEND);
 
