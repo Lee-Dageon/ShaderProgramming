@@ -128,9 +128,29 @@ void Thrust()
 
 void Shape()
 {
-	gl_Position = vec4(a_Position, 1);
 	v_Grey = 1.0f;
 	v_Tex = a_Tex;
+
+	float lifeTime = 0.5 + 5.0 * a_RV;
+	float startTime = 5.0 * a_RV1;
+	
+	float newTime = u_Time - startTime;	// -면 태어나지 않은 것
+	if(newTime > 0)
+	{
+		float t = fract(newTime/lifeTime) * lifeTime;	// 0~lifeTime
+		float tt = t*t;
+
+		float newX = a_Position.x + a_Vel.x*t;
+		float newY = a_Position.y + a_Vel.y*t;
+
+		gl_Position = vec4(newX, newY, 0, 1);
+	}
+	else
+	{
+		gl_Position = vec4(-10000,0,0,1);
+	}
+
+	//gl_Position = vec4(a_Position, 1); // 이 부분이 계산된 위치를 덮어쓰고 있었음
 }
 
 void main()

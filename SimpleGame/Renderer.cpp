@@ -33,8 +33,6 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 		m_NumTexture[i] = CreatePngTexture((char*)filePath.c_str(), GL_NEAREST);
 	}
 
-	GenParticles(5000);
-
 	int index = 0;
 	for (int i = 0; i < 500; i++)
 	{
@@ -55,6 +53,8 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	{
 		m_Initialized = true;
 	}
+
+	GenParticles(1000);
 }
 
 bool Renderer::IsInitialized()
@@ -341,6 +341,77 @@ void Renderer::GetGLPosition(float x, float y, float* newX, float* newY)
 	*newY = y * 2.f / m_WindowSizeY;
 }
 
+void Renderer::GenParticles(int num)
+{
+	// particle 데이터 (총 11개의 float)
+	struct Vertex
+	{
+		float x, y, z;
+		float mass;
+		float vx, vy;
+		float rv;
+		float rv1;
+		float rv2;
+		float u, v;
+	};
+
+	// num * 6개의 정점 데이터를 담을 벡터(동적 배열)
+	std::vector<Vertex> vertices;
+	vertices.resize(num * 6); // 파티클 하나당 6개의 정점이므로 총 크기를 미리 할당
+
+	for (int i = 0; i < num; i++)
+	{
+		// 각 파티클의 초기 위치, 크기, 질량, 속도를 랜덤하게 생성
+		float centerX = 0.0f;
+		float centerY = 0.0f;
+		float size = 0.1f;
+		float mass = 1;
+
+		// 속도
+		float vx = ((rand() % 200) - 100) / 100.0f; // -1.0 ~ 1.0 사이의 랜덤 속도
+		float vy = ((rand() % 200) - 100) / 100.0f;
+
+		float rv = ((rand() % 100)) / 100.0f; // 0 ~ 1 사이의 랜덤 값
+		float rv1 = ((rand() % 100)) / 100.0f;
+		float rv2 = ((rand() % 100)) / 100.0f;
+
+		float LEFT = centerX - size / 2;
+		float RIGHT = centerX + size / 2;
+		float BOTTOM = centerY - size / 2;
+		float TOP = centerY + size / 2;
+
+		// 파티클 하나(사각형)를 구성하는 6개의 정점 데이터 생성
+		Vertex v[6];
+		// Triangle 1
+		v[0] = { LEFT, BOTTOM, 0.0f, mass, vx, vy, rv, rv1, rv2, 0.f, 1.f }; // v0
+		v[1] = { RIGHT, BOTTOM, 0.0f, mass, vx, vy, rv, rv1, rv2, 1.f, 1.f }; // v1
+		v[2] = { RIGHT, TOP, 0.0f, mass, vx, vy, rv, rv1, rv2, 1.f, 0.f }; // v2
+		// Triangle 2
+		v[3] = { LEFT, BOTTOM, 0.0f, mass, vx, vy, rv, rv1, rv2, 0.f, 1.f }; // v0
+		v[4] = { RIGHT, TOP, 0.0f, mass, vx, vy, rv, rv1, rv2, 1.f, 0.f }; // v2
+		v[5] = { LEFT, TOP, 0.0f, mass, vx, vy, rv, rv1, rv2, 0.f, 0.f }; // v3
+		
+		// 생성된 6개의 정점 데이터를 전체 벡터에 복사
+		memcpy(&vertices[i * 6], v, sizeof(Vertex) * 6);
+	}
+
+	// 이전에 생성된 VBO가 있다면 삭제
+	if (m_ParticleVBO != 0)
+	{
+		glDeleteBuffers(1, &m_ParticleVBO);
+	}
+
+	// VBO 생성 및 데이터 업로드
+	glGenBuffers(1, &m_ParticleVBO); // VBO 핸들(ID) 생성
+	glBindBuffer(GL_ARRAY_BUFFER, m_ParticleVBO); // 생성한 VBO를 현재 작업 대상으로 지정
+
+	// CPU에 있는 전체 정점 데이터를 GPU의 VBO로 복사
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * num * 6, vertices.data(), GL_STATIC_DRAW);
+
+	// 총 정점 개수를 멤버 변수에 저장
+	m_VBOParticleCount = num * 6;
+}
+
 void Renderer::DrawParticles()
 {
 	gTime += 0.0001f; // 시간 증가 (애니메이션 효과를 위해)
@@ -414,7 +485,7 @@ void Renderer::DrawParticles()
 		attribRV2, 1, /*한 개씩 읽어라*/
 		GL_FLOAT, GL_FALSE,
 		stride * sizeof(float), (GLvoid*)(sizeof(float) * 8)
-	);	
+	);
 
 	// 파티클 tex 좌표 attribute 설정
 	glVertexAttribPointer(
@@ -437,78 +508,6 @@ void Renderer::DrawParticles()
 
 	// 현재 바인딩된 프레임버퍼를 기본 프레임버퍼로 되돌림 (DrawTriangle에 따라 동일하게)
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
-
-void Renderer::GenParticles(int num)
-{
-	// particle 데이터 (총 11개의 float)
-	struct Vertex
-	{
-		float x, y, z;
-		float mass;
-		float vx, vy;
-		float rv;
-		float rv1;
-		float rv2;
-		float u, v;
-	};
-
-	// num * 6개의 정점 데이터를 담을 벡터(동적 배열)
-	std::vector<Vertex> vertices;
-	vertices.resize(num * 6); // 파티클 하나당 6개의 정점이므로 총 크기를 미리 할당
-
-	for (int i = 0; i < num; i++)
-	{
-		// 각 파티클의 초기 위치, 크기, 질량, 속도를 랜덤하게 생성
-		float centerX = 0.0f;
-		float centerY = 0.0f;
-		float size = 0.1f;
-		float mass = 1;
-
-		// x축 속도를 0으로 설정하여 양옆으로 튀지 않게 합니다.
-		float vx = 0.0f;
-		// 위로 튀고 떨어지는 느낌을 줄이려면 y축 초기 속도(vy)도 0.0f 또는 음수로 조절할 수 있습니다.
-		float vy = 0.0f; 
-
-		float rv = ((rand() % 100)) / 100.0f; // 0 ~ 1 사이의 랜덤 값
-		float rv1 = ((rand() % 100)) / 100.0f;
-		float rv2 = ((rand() % 100)) / 100.0f;
-
-		float LEFT = centerX - size / 2;
-		float RIGHT = centerX + size / 2;
-		float BOTTOM = centerY - size / 2;
-		float TOP = centerY + size / 2;
-
-		// 파티클 하나(사각형)를 구성하는 6개의 정점 데이터 생성
-		Vertex v[6];
-		// Triangle 1
-		v[0] = { LEFT, BOTTOM, 0.0f, mass, vx, vy, rv, rv1, rv2, 0.f, 1.f }; // v0
-		v[1] = { RIGHT, BOTTOM, 0.0f, mass, vx, vy, rv, rv1, rv2, 1.f, 1.f }; // v1
-		v[2] = { RIGHT, TOP, 0.0f, mass, vx, vy, rv, rv1, rv2, 1.f, 0.f }; // v2
-		// Triangle 2
-		v[3] = { LEFT, BOTTOM, 0.0f, mass, vx, vy, rv, rv1, rv2, 0.f, 1.f }; // v0
-		v[4] = { RIGHT, TOP, 0.0f, mass, vx, vy, rv, rv1, rv2, 1.f, 0.f }; // v2
-		v[5] = { LEFT, TOP, 0.0f, mass, vx, vy, rv, rv1, rv2, 0.f, 0.f }; // v3
-		
-		// 생성된 6개의 정점 데이터를 전체 벡터에 복사
-		memcpy(&vertices[i * 6], v, sizeof(Vertex) * 6);
-	}
-
-	// 이전에 생성된 VBO가 있다면 삭제
-	if (m_ParticleVBO != 0)
-	{
-		glDeleteBuffers(1, &m_ParticleVBO);
-	}
-
-	// VBO 생성 및 데이터 업로드
-	glGenBuffers(1, &m_ParticleVBO); // VBO 핸들(ID) 생성
-	glBindBuffer(GL_ARRAY_BUFFER, m_ParticleVBO); // 생성한 VBO를 현재 작업 대상으로 지정
-
-	// CPU에 있는 전체 정점 데이터를 GPU의 VBO로 복사
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * num * 6, vertices.data(), GL_STATIC_DRAW);
-
-	// 총 정점 개수를 멤버 변수에 저장
-	m_VBOParticleCount = num * 6;
 }
 
 void Renderer::DrawFS()
