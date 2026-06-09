@@ -295,7 +295,10 @@ float gTime = 0;
 
 void Renderer::DrawTriangle()
 {
-	gTime += 0.0001f;
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	gTime += 0.001f;
 	//Program select
 	glUseProgram(m_TriangleShader);
 
@@ -333,6 +336,8 @@ void Renderer::DrawTriangle()
 	glDisableVertexAttribArray(attribPosition);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glDisable(GL_BLEND);
 }
 
 void Renderer::GetGLPosition(float x, float y, float* newX, float* newY)
@@ -414,6 +419,9 @@ void Renderer::GenParticles(int num)
 
 void Renderer::DrawParticles()
 {
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	gTime += 0.0001f; // 시간 증가 (애니메이션 효과를 위해)
 	// Program select - 파티클 렌더링에 m_TriangleShader를 재사용합니다.
 	glUseProgram(m_TriangleShader);
@@ -505,6 +513,8 @@ void Renderer::DrawParticles()
 	glDisableVertexAttribArray(attribRV);
 	glDisableVertexAttribArray(attribRV1);
 	glDisableVertexAttribArray(attribRV2);
+
+	glDisable(GL_BLEND);
 
 	// 현재 바인딩된 프레임버퍼를 기본 프레임버퍼로 되돌림 (DrawTriangle에 따라 동일하게)
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
