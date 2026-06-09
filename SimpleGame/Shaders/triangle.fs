@@ -31,7 +31,7 @@ void AnimTexture()
 {
 	float resolX = 9.0;
 	float resolY = 9.0;
-	float index = 10;
+	float index = floor((1.0 - v_Grey) * (resolX * resolY - 1)); // 0~80
 	float tx = v_Tex.x / resolX;
 	float ty = v_Tex.y / resolY;
 	float offsetX = fract(index / resolX);
