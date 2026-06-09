@@ -7,6 +7,7 @@ in vec2 a_Vel;
 in float a_RV;
 in float a_RV1;
 in float a_RV2;
+in float a_Tex;
 
 out float v_Grey;
 out vec3 v_Color;
@@ -123,9 +124,15 @@ void Thrust()
 	}
 }
 
+void Shape()
+{
+	gl_Position = vec4(a_Position, 1);
+	v_Grey = 1.0f;
+}
+
 void main()
 {
-	Thrust();
+	Shape();
 }
 
 /* rv 2개 더 추가됐으니

@@ -358,6 +358,7 @@ void Renderer::DrawParticles()
 	int attribRV = glGetAttribLocation(m_TriangleShader, "a_RV");
 	int attribRV1 = glGetAttribLocation(m_TriangleShader, "a_RV1");
 	int attribRV2 = glGetAttribLocation(m_TriangleShader, "a_RV2");
+	int attribTex = glGetAttribLocation(m_TriangleShader, "a_Tex");
 
 	// attribute 배열 활성화
 	glEnableVertexAttribArray(attribPosition);
@@ -366,6 +367,9 @@ void Renderer::DrawParticles()
 	glEnableVertexAttribArray(attribRV);
 	glEnableVertexAttribArray(attribRV1);
 	glEnableVertexAttribArray(attribRV2);
+	glEnableVertexAttribArray(attribTex);
+
+	int stride = 11;
 
 	// 파티클 VBO 바인딩
 	glBindBuffer(GL_ARRAY_BUFFER, m_ParticleVBO);
@@ -374,42 +378,49 @@ void Renderer::DrawParticles()
 	glVertexAttribPointer(
 		attribPosition, 3, /*세 개씩 읽어라*/
 		GL_FLOAT, GL_FALSE,
-		9 * sizeof(float), /*start position*/ 0
+		stride * sizeof(float), /*start position*/ 0
 	);
 
 	// 파티클 질량 attribute 설정
 	glVertexAttribPointer(
 		attribMass, 1, /*하나씩 읽어라*/
 		GL_FLOAT, GL_FALSE,
-		9 * sizeof(float), (GLvoid*)(sizeof(float) * 3)
+		stride * sizeof(float), (GLvoid*)(sizeof(float) * 3)
 	);
 
 	// 파티클 속도 attribute 설정
 	glVertexAttribPointer(
 		attribVel, 2, /*두 개씩 읽어라*/
 		GL_FLOAT, GL_FALSE,
-		9 * sizeof(float), (GLvoid*)(sizeof(float) * 4)
+		stride * sizeof(float), (GLvoid*)(sizeof(float) * 4)
 	);
 
 	// 파티클 RV attribute 설정
 	glVertexAttribPointer(
 		attribRV, 1, /*한 개씩 읽어라*/
 		GL_FLOAT, GL_FALSE,
-		9 * sizeof(float), (GLvoid*)(sizeof(float) * 6)
+		stride * sizeof(float), (GLvoid*)(sizeof(float) * 6)
 	);
 
 	// 파티클 RV1 attribute 설정
 	glVertexAttribPointer(
 		attribRV1, 1, /*한 개씩 읽어라*/
 		GL_FLOAT, GL_FALSE,
-		9 * sizeof(float), (GLvoid*)(sizeof(float) * 7)
+		stride * sizeof(float), (GLvoid*)(sizeof(float) * 7)
 	);
 
 	// 파티클 RV2 attribute 설정
 	glVertexAttribPointer(
 		attribRV2, 1, /*한 개씩 읽어라*/
 		GL_FLOAT, GL_FALSE,
-		9 * sizeof(float), (GLvoid*)(sizeof(float) * 8)
+		stride * sizeof(float), (GLvoid*)(sizeof(float) * 8)
+	);	
+
+	// 파티클 tex 좌표 attribute 설정
+	glVertexAttribPointer(
+		attribTex, 2, /*두 개씩 읽어라*/
+		GL_FLOAT, GL_FALSE,
+		stride * sizeof(float), (GLvoid*)(sizeof(float) * 9)
 	);
 
 	// 파티클 그리기
@@ -430,7 +441,7 @@ void Renderer::DrawParticles()
 
 void Renderer::GenParticles(int num)
 {
-	// particle 데이터
+	// particle 데이터 (총 11개의 float)
 	struct Vertex
 	{
 		float x, y, z;
@@ -439,6 +450,7 @@ void Renderer::GenParticles(int num)
 		float rv;
 		float rv1;
 		float rv2;
+		float u, v;
 	};
 
 	// num * 6개의 정점 데이터를 담을 벡터(동적 배열)
@@ -450,7 +462,7 @@ void Renderer::GenParticles(int num)
 		// 각 파티클의 초기 위치, 크기, 질량, 속도를 랜덤하게 생성
 		float centerX = 0.0f;
 		float centerY = 0.0f;
-		float size = 0.01;
+		float size = 0.1f;
 		float mass = 1;
 
 		// x축 속도를 0으로 설정하여 양옆으로 튀지 않게 합니다.
@@ -462,17 +474,22 @@ void Renderer::GenParticles(int num)
 		float rv1 = ((rand() % 100)) / 100.0f;
 		float rv2 = ((rand() % 100)) / 100.0f;
 
+		float LEFT = centerX - size / 2;
+		float RIGHT = centerX + size / 2;
+		float BOTTOM = centerY - size / 2;
+		float TOP = centerY + size / 2;
+
 		// 파티클 하나(사각형)를 구성하는 6개의 정점 데이터 생성
 		Vertex v[6];
 		// Triangle 1
-		v[0] = { centerX - size / 2, centerY - size / 2, 0.0f, mass, vx, vy, rv, rv1, rv2 }; // v0
-		v[1] = { centerX + size / 2, centerY - size / 2, 0.0f, mass, vx, vy, rv, rv1, rv2 }; // v1
-		v[2] = { centerX + size / 2, centerY + size / 2, 0.0f, mass, vx, vy, rv, rv1, rv2 }; // v2
+		v[0] = { LEFT, BOTTOM, 0.0f, mass, vx, vy, rv, rv1, rv2, 0.f, 1.f }; // v0
+		v[1] = { RIGHT, BOTTOM, 0.0f, mass, vx, vy, rv, rv1, rv2, 1.f, 1.f }; // v1
+		v[2] = { RIGHT, TOP, 0.0f, mass, vx, vy, rv, rv1, rv2, 1.f, 0.f }; // v2
 		// Triangle 2
-		v[3] = { centerX - size / 2, centerY - size / 2, 0.0f, mass, vx, vy, rv, rv1, rv2 }; // v0
-		v[4] = { centerX + size / 2, centerY + size / 2, 0.0f, mass, vx, vy, rv, rv1, rv2 }; // v2
-		v[5] = { centerX - size / 2, centerY + size / 2, 0.0f, mass, vx, vy, rv, rv1, rv2 }; // v3
-
+		v[3] = { LEFT, BOTTOM, 0.0f, mass, vx, vy, rv, rv1, rv2, 0.f, 1.f }; // v0
+		v[4] = { RIGHT, TOP, 0.0f, mass, vx, vy, rv, rv1, rv2, 1.f, 0.f }; // v2
+		v[5] = { LEFT, TOP, 0.0f, mass, vx, vy, rv, rv1, rv2, 0.f, 0.f }; // v3
+		
 		// 생성된 6개의 정점 데이터를 전체 벡터에 복사
 		memcpy(&vertices[i * 6], v, sizeof(Vertex) * 6);
 	}
