@@ -358,7 +358,10 @@ void Renderer::GenParticles(int num)
 		float rv1;
 		float rv2;
 		float u, v;
+		float r, g, b;
 	};
+
+	const int floatsPerVertex = 14;
 
 	// num * 6개의 정점 데이터를 담을 벡터(동적 배열)
 	std::vector<Vertex> vertices;
@@ -376,9 +379,13 @@ void Renderer::GenParticles(int num)
 		float vx = 3 * (((rand() % 200) - 100) / 100.0f); // -3.0 ~ 3.0 사이의 랜덤 속도
 		float vy = 3 * (((rand() % 200) - 100) / 100.0f); // -3.0 ~ 3.0 사이의 랜덤 속도
 
-		float rv = ((rand() % 100)) / 100.0f; // 0 ~ 1 사이의 랜덤 값
-		float rv1 = ((rand() % 100)) / 100.0f;
-		float rv2 = ((rand() % 100)) / 100.0f;
+		float rv = static_cast<float>(std::rand()) / (RAND_MAX);	// 0~1 사이의 랜덤 값
+		float rv1 = static_cast<float>(std::rand()) / (RAND_MAX);
+		float rv2 = static_cast<float>(std::rand()) / (RAND_MAX);
+
+		float R = static_cast<float>(std::rand()) / (RAND_MAX);	// 0~1 사이의 랜덤 값
+		float G = static_cast<float>(std::rand()) / (RAND_MAX);
+		float B = static_cast<float>(std::rand()) / (RAND_MAX);
 
 		float LEFT = centerX - size / 2;
 		float RIGHT = centerX + size / 2;
@@ -388,13 +395,13 @@ void Renderer::GenParticles(int num)
 		// 파티클 하나(사각형)를 구성하는 6개의 정점 데이터 생성
 		Vertex v[6];
 		// Triangle 1
-		v[0] = { LEFT, BOTTOM, 0.0f, mass, vx, vy, rv, rv1, rv2, 0.f, 1.f }; // v0
-		v[1] = { RIGHT, BOTTOM, 0.0f, mass, vx, vy, rv, rv1, rv2, 1.f, 1.f }; // v1
-		v[2] = { RIGHT, TOP, 0.0f, mass, vx, vy, rv, rv1, rv2, 1.f, 0.f }; // v2
+		v[0] = { LEFT, BOTTOM, 0.0f, mass, vx, vy, rv, rv1, rv2, 0.f, 1.f, R, G, B }; // v0
+		v[1] = { RIGHT, BOTTOM, 0.0f, mass, vx, vy, rv, rv1, rv2, 1.f, 1.f, R, G, B }; // v1
+		v[2] = { RIGHT, TOP, 0.0f, mass, vx, vy, rv, rv1, rv2, 1.f, 0.f, R, G, B }; // v2
 		// Triangle 2
-		v[3] = { LEFT, BOTTOM, 0.0f, mass, vx, vy, rv, rv1, rv2, 0.f, 1.f }; // v0
-		v[4] = { RIGHT, TOP, 0.0f, mass, vx, vy, rv, rv1, rv2, 1.f, 0.f }; // v2
-		v[5] = { LEFT, TOP, 0.0f, mass, vx, vy, rv, rv1, rv2, 0.f, 0.f }; // v3
+		v[3] = { LEFT, BOTTOM, 0.0f, mass, vx, vy, rv, rv1, rv2, 0.f, 1.f, R, G, B }; // v0
+		v[4] = { RIGHT, TOP, 0.0f, mass, vx, vy, rv, rv1, rv2, 1.f, 0.f, R, G, B }; // v2
+		v[5] = { LEFT, TOP, 0.0f, mass, vx, vy, rv, rv1, rv2, 0.f, 0.f, R, G, B }; // v3
 		
 		// 생성된 6개의 정점 데이터를 전체 벡터에 복사
 		memcpy(&vertices[i * 6], v, sizeof(Vertex) * 6);
@@ -438,6 +445,7 @@ void Renderer::DrawParticles()
 	int attribRV1 = glGetAttribLocation(m_TriangleShader, "a_RV1");
 	int attribRV2 = glGetAttribLocation(m_TriangleShader, "a_RV2");
 	int attribTex = glGetAttribLocation(m_TriangleShader, "a_Tex");
+	int attribRGB = glGetAttribLocation(m_TriangleShader, "a_RGB");
 
 	// attribute 배열 활성화
 	glEnableVertexAttribArray(attribPosition);
@@ -447,8 +455,9 @@ void Renderer::DrawParticles()
 	glEnableVertexAttribArray(attribRV1);
 	glEnableVertexAttribArray(attribRV2);
 	glEnableVertexAttribArray(attribTex);
+	glEnableVertexAttribArray(attribRGB);
 
-	int stride = 11;
+	int stride = 14;
 
 	// 파티클 VBO 바인딩
 	glBindBuffer(GL_ARRAY_BUFFER, m_ParticleVBO);
@@ -500,6 +509,14 @@ void Renderer::DrawParticles()
 		attribTex, 2, /*두 개씩 읽어라*/
 		GL_FLOAT, GL_FALSE,
 		stride * sizeof(float), (GLvoid*)(sizeof(float) * 9)
+	);
+
+	// 파티클 RGB attribute 설정
+	// 11부터
+	glVertexAttribPointer(
+		attribRGB, 3, /*세 개씩 읽어라*/   
+		GL_FLOAT, GL_FALSE,
+		stride * sizeof(float), (GLvoid*)(sizeof(float) * 11)
 	);
 
 	// 파티클 그리기

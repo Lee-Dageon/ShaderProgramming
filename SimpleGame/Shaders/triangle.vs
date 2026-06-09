@@ -8,14 +8,20 @@ in float a_RV;
 in float a_RV1;
 in float a_RV2;
 in vec2 a_Tex;
+in vec3 a_RGB;
 
 out float v_Grey;
 out vec2 v_Tex;
-
 out vec3 v_Color;
 
 const float c_PI = 3.141592;
 const vec2 c_Gravity = vec2(0, -9.8);
+
+// 랜덤 값
+float random(float x)
+{
+	return fract(sin(x) * 43758.5453123);
+}
 
 // Basic: move right and reset
 void Basic()
@@ -128,9 +134,6 @@ void Thrust()
 
 void Shape()
 {
-	v_Grey = 1.0f;
-	v_Tex = a_Tex;
-
 	float lifeTime = 0.5 + 5.0 * a_RV;
 	float startTime = 5.0 * a_RV1;
 	
@@ -145,11 +148,16 @@ void Shape()
 
 		gl_Position = vec4(newX, newY, 0, 1);
 		v_Grey = 1 - fract(newTime/lifeTime);	// 시간이 지날수록 어두워짐
+		v_Color = a_RGB;
 	}
 	else
 	{
 		gl_Position = vec4(-10000,0,0,1);
 	}
+
+	v_Grey = 1;
+	v_Color = a_RGB;
+	v_Tex = a_Tex;
 
 	//gl_Position = vec4(a_Position, 1); // 이 부분이 계산된 위치를 덮어쓰고 있었음
 }
