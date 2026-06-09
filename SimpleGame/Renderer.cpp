@@ -373,8 +373,8 @@ void Renderer::GenParticles(int num)
 		float mass = 1;
 
 		// 속도
-		float vx = ((rand() % 200) - 100) / 100.0f; // -1.0 ~ 1.0 사이의 랜덤 속도
-		float vy = ((rand() % 200) - 100) / 100.0f;
+		float vx = 3 * (((rand() % 200) - 100) / 100.0f); // -3.0 ~ 3.0 사이의 랜덤 속도
+		float vy = 3 * (((rand() % 200) - 100) / 100.0f); // -3.0 ~ 3.0 사이의 랜덤 속도
 
 		float rv = ((rand() % 100)) / 100.0f; // 0 ~ 1 사이의 랜덤 값
 		float rv1 = ((rand() % 100)) / 100.0f;
