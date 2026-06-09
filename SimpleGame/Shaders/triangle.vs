@@ -7,9 +7,11 @@ in vec2 a_Vel;
 in float a_RV;
 in float a_RV1;
 in float a_RV2;
-in float a_Tex;
+in vec2 a_Tex;
 
 out float v_Grey;
+out vec2 v_Tex;
+
 out vec3 v_Color;
 
 const float c_PI = 3.141592;
@@ -65,13 +67,13 @@ float pseudoRandom(float seed) {
 void falling()
 {
 	//emitTime
-	float newTime = u_Time - a_RV1 * 3;	// -¸é ÅÂ¾î³ªÁö ¾ÊÀº °Í
+	float newTime = u_Time - a_RV1 * 3;	// -ë©´ íƒœì–´ë‚˜ì§€ ì•Šì€ ê²ƒ
 	
-	// a_RV ¸¦ 0.5 ´ë½Å ³ÖÀ¸¸é µÊ
-	// ¿ø »ó¿¡¼­ Áö¼ÓµÇ´Â °á°ú¹°
+	// a_RV ë¥¼ 0.5 ëŒ€ì‹  ë„£ìœ¼ë©´ ë¨
+	// ì› ìƒì—ì„œ ì§€ì†ë˜ëŠ” ê²°ê³¼ë¬¼
 	// pseudoRandom(a_RV)
 
-	if(newTime > 0)	// ÅÂ¾î³­ °Í
+	if(newTime > 0)	// íƒœì–´ë‚œ ê²ƒ
 	{
 		float lifeTime = a_RV2;
 		float t = mod(newTime, lifeTime);	// 0~1
@@ -90,8 +92,8 @@ void falling()
 
 void Thrust()
 {
-	float newTime = u_Time - a_RV1 * 3;	// -¸é ÅÂ¾î³ªÁö ¾ÊÀº °Í
-	if(newTime > 0)	// ÅÂ¾î³­ °Í
+	float newTime = u_Time - a_RV1 * 3;	// -ë©´ íƒœì–´ë‚˜ì§€ ì•Šì€ ê²ƒ
+	if(newTime > 0)	// íƒœì–´ë‚œ ê²ƒ
 	{
 		float t = mod (newTime, 1.0);	// 0~1
 		float ampScale = 0.5 - 0.5 * t;
@@ -107,18 +109,18 @@ void Thrust()
 		
 		newPosition.z = a_Position.z;
 		gl_Position = newPosition;
-		v_Grey = 1 - t;	// ½Ã°£ÀÌ Áö³¯¼ö·Ï ¾îµÎ¿öÁü
+		v_Grey = 1 - t;	// ì‹œê°„ì´ ì§€ë‚ ìˆ˜ë¡ ì–´ë‘ì›Œì§
 
-		// ÁøÆøÀ» »ö»óÀ¸·Î ¸ÅÇÎ: ÁøÆø Å©±â°¡ ÀÛÀ»¼ö·Ï »¡°­(1,0,0), Å¬¼ö·Ï ³ë¶û(1,1,0)
+		// ì§„í­ì„ ìƒ‰ìƒìœ¼ë¡œ ë§¤í•‘: ì§„í­ í¬ê¸°ê°€ ì‘ì„ìˆ˜ë¡ ë¹¨ê°•(1,0,0), í´ìˆ˜ë¡ ë…¸ë‘(1,1,0)
 		float ampMagnitude = abs(amp); // 0 ~ ampScale
-		// ampScaleÀÇ ÃÖ´ë°ªÀº 0.5ÀÌ¹Ç·Î 0.5·Î Á¤±ÔÈ­ÇÏ¸é 0..1 ¹üÀ§¸¦ ¾òÀ½
+		// ampScaleì˜ ìµœëŒ€ê°’ì€ 0.5ì´ë¯€ë¡œ 0.5ë¡œ ì •ê·œí™”í•˜ë©´ 0..1 ë²”ìœ„ë¥¼ ì–»ìŒ
 		float ampNorm = clamp(ampMagnitude / 0.5, 0.0, 1.0);
-		// ±×¸° Ã¤³ÎÀ» ampNormÀ¸·Î Áõ°¡½ÃÄÑ red->yellow·Î º¯°æ (red + green)
+		// ê·¸ë¦° ì±„ë„ì„ ampNormìœ¼ë¡œ ì¦ê°€ì‹œì¼œ red->yellowë¡œ ë³€ê²½ (red + green)
 		v_Color = vec3(1.0, ampNorm * 2, 0.0);
 	}
 	else
 	{	
-		gl_Position = vec4(-100, -100, -100, 1);	// ÅÂ¾î³ªÁö ¾ÊÀº °Í
+		gl_Position = vec4(-100, -100, -100, 1);	// íƒœì–´ë‚˜ì§€ ì•Šì€ ê²ƒ
 		v_Grey = 0;
 		v_Color = vec3(0.0);
 	}
@@ -128,6 +130,7 @@ void Shape()
 {
 	gl_Position = vec4(a_Position, 1);
 	v_Grey = 1.0f;
+	v_Tex = a_Tex;
 }
 
 void main()
@@ -135,5 +138,5 @@ void main()
 	Shape();
 }
 
-/* rv 2°³ ´õ Ãß°¡µÆÀ¸´Ï
-Falling ÀÌ¶ó´Â API Ã³·³ ÇÏ³ªÀÇ ÇÔ¼ö¿¡ ¹­¾î¼­ ¿¹»Û ÀÌÆåÆ®¸¦ ¸¸µé¾îÁà. */
+/* rv 2ê°œ ë” ì¶”ê°€ëìœ¼ë‹ˆ
+Falling ì´ë¼ëŠ” API ì²˜ëŸ¼ í•˜ë‚˜ì˜ í•¨ìˆ˜ì— ë¬¶ì–´ì„œ ì˜ˆìœ ì´í™íŠ¸ë¥¼ ë§Œë“¤ì–´ì¤˜. */

@@ -8,6 +8,6 @@ in vec2 v_Tex;
 
 void main()
 {
-	// v_Color은 이미 v_Grey로 감쇄된 색상일 수 있으므로 그대로 출력
-	FragColor = vec4(v_Grey);
+	float d = distance(vec2(0.5, 0.5), v_Tex);
+	FragColor = vec4(d);
 }
