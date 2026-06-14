@@ -47,7 +47,7 @@ void Circles()
 			float t = nVal*lTime;
 			float d = distance(center, pos);
 
-			float sinValue = sin(d*4*c_PI*8 + t * 2);
+			float sinValue = abs(sin(d*4*c_PI*8 + t * 2));
 			accum += sinValue;
 		}
 	}
