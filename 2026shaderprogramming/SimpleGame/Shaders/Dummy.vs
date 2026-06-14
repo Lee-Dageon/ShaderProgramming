@@ -16,10 +16,10 @@ void Flag()
 	float value = a_Pos.x + 0.5; // 0~1
 
 	float newX = a_Pos.x + 0;
-	float newY = a_Pos.y*(1-value) + 
+	float newY = a_Pos.y*(1.0-(value*0.5)) + 
 	value * 0.25 * sin((a_Pos.x+0.5)*2*c_PI - u_Time);
 
-	vec4 newPosition = vec4(newX, newY*(1-value), 0.0, 1.0);
+	vec4 newPosition = vec4(newX, newY, 0.0, 1.0);
 
 	v_Grey = (1.0+sin((a_Pos.x+0.5)*2*c_PI - u_Time))/2.0;
 
