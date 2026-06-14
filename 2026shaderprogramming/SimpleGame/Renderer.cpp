@@ -41,6 +41,7 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_NumsTexture = CreatePngTexture("./textures/numbers.png", GL_NEAREST); //1slot
 	m_ParticleTexture = CreatePngTexture("./textures/particle.png", GL_NEAREST); 
 	m_ParticleSpriteTexture = CreatePngTexture("./textures/explosion.png", GL_NEAREST);
+	m_JangTexture = CreatePngTexture("./textures/wonyeong.png", GL_NEAREST);
 
 	for (int i = 0; i < 10; i++)
 	{
@@ -785,6 +786,12 @@ void Renderer::DrawDummy()
 		GL_FALSE, 
 		sizeof(float) * 3, 
 		0);
+
+	// u_JangTex 텍스처                                                       
+	int uJangTex = glGetUniformLocation(shader, "u_JangTex");
+	glUniform1i(uJangTex, 0);               // 슬롯 0번 사용하겠다고 셰이더에 알림                      
+	glActiveTexture(GL_TEXTURE0);           // 슬롯 0번 활성화                                          
+	glBindTexture(GL_TEXTURE_2D, m_JangTexture); // 실제 텍스처 바인딩 
 
 	glDrawArrays(GL_TRIANGLES, 0, m_VBODummyCount);
 }

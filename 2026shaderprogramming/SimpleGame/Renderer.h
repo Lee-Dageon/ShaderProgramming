@@ -58,6 +58,7 @@ private:
 	GLuint m_NumsTexture = 0;
 	GLuint m_ParticleTexture = 0;
 	GLuint m_ParticleSpriteTexture = 0;
+	GLuint m_JangTexture = 0;
 
 	//Dummy Mesh
 	GLuint m_VBODummy = 0;
