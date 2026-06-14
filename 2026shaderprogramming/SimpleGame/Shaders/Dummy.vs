@@ -52,7 +52,7 @@ void Circles()
 
 			float fade = 30 * clamp(range - d, 0, 1.0);
 
-			float sinValue = abs(sin(d*4*c_PI*8 + t * 2));
+			float sinValue = pow(abs(sin(d*4*c_PI*8 + t * 2)),3.0);
 			accum += sinValue * fade* oneMinus;
 		}
 	}
