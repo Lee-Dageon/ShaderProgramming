@@ -33,7 +33,7 @@ void Circles()
 
 	float d = distance(center, pos);
 
-	v_Grey = sin(d*4*c_PI);
+	v_Grey = sin(d*4*c_PI*8 + u_Time * 2);
 
 	gl_Position = vec4(a_Pos, 1.0);
 }
