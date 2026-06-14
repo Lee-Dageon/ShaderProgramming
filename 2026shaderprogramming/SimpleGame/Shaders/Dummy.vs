@@ -28,14 +28,22 @@ void Flag()
 
 void Circles()
 {
-	vec2 center = vec2(0.0,0.0);
-	vec2 pos = a_Pos.xy;
+	vec2 points[2];
+	points[0] = vec2(0.0, 0.0);
+	points[1] = vec2(0.2, 0.2);
+	
+	float accum = 0;
+	for(int i = 0; i< 2; i++)
+	{
+		vec2 center = points[i];
+		vec2 pos = a_Pos.xy;
+		float d = distance(center, pos);
+		accum += sin(d*4*c_PI*8 + u_Time * 2);
+	}
 
-	float d = distance(center, pos);
-
-	v_Grey = sin(d*4*c_PI*8 + u_Time * 2);
-
+	v_Grey = accum;
 	gl_Position = vec4(a_Pos, 1.0);
+
 }
 
 void main()
