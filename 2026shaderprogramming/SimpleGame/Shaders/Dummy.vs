@@ -16,7 +16,7 @@ void Flag()
 	float value = a_Pos.x + 0.5; // 0~1
 
 	float newX = a_Pos.x + 0;
-	float newY = a_Pos.y + 
+	float newY = a_Pos.y*(1-value) + 
 	value * 0.25 * sin((a_Pos.x+0.5)*2*c_PI - u_Time);
 
 	vec4 newPosition = vec4(newX, newY*(1-value), 0.0, 1.0);

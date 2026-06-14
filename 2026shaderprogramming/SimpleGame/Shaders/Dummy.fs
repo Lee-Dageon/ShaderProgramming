@@ -40,5 +40,5 @@ void main()
 	FragColor = vec4(v_Grey);
 	FragColor = vec4(v_Tex, 0, 1);
 	vec2 newTex = rotate2D(-c_PI/2.0) * v_Tex;
-	FragColor = LinePattern() * texture(u_JangTex, v_Tex);
+	FragColor = texture(u_JangTex, v_Tex);
 }
