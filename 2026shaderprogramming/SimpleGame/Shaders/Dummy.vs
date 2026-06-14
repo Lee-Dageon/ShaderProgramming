@@ -24,9 +24,21 @@ void Flag()
 	v_Grey = (1.0+sin((a_Pos.x+0.5)*2*c_PI - u_Time))/2.0;
 
 	gl_Position = newPosition;
-	}
+}
+
+void Circles()
+{
+	vec2 center = vec2(0.0,0.0);
+	vec2 pos = a_Pos.xy;
+
+	float d = distance(center, pos);
+
+	v_Grey = d;
+
+	gl_Position = vec4(a_Pos, 1.0);
+}
 
 void main()
 {
-	Flag();
+	Circles();
 }
