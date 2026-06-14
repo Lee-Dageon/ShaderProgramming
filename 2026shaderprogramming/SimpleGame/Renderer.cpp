@@ -787,6 +787,11 @@ void Renderer::DrawDummy()
 		sizeof(float) * 3, 
 		0);
 
+	int uPoints = glGetUniformLocation(
+		shader, "u_DropInfo");
+	glUniform4fv(uPoints, 1000, m_DropPoints);
+
+
 	// u_JangTex 텍스처                                                       
 	int uJangTex = glGetUniformLocation(shader, "u_JangTex");
 	glUniform1i(uJangTex, 0);               // 슬롯 0번 사용하겠다고 셰이더에 알림                      
