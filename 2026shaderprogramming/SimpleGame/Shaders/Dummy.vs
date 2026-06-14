@@ -43,12 +43,17 @@ void Circles()
 
 		if(nTime >0)
 		{
-			float nVal = fract(nTime/lTime);
-			float t = nVal*lTime;
+			float nVal = fract(nTime/lTime); //0~1
+			float oneMinus = 1.0 - nVal; //1~0
+			float t = nVal*lTime; // 0~lTime
 			float d = distance(center, pos);
 
+			float range = t/5.0;
+
+			float fade = 30 * clamp(range - d, 0, 1.0);
+
 			float sinValue = abs(sin(d*4*c_PI*8 + t * 2));
-			accum += sinValue;
+			accum += sinValue * fade* oneMinus;
 		}
 	}
 
