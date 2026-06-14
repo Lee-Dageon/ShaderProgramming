@@ -1,5 +1,6 @@
 #version 330
 
+// 출력하는 것을 0번 프레임버퍼에 그린다
 layout(location=0) out vec4 FragColor;
 
 in vec2 v_Tex;

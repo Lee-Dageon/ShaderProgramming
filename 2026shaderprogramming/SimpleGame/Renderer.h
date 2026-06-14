@@ -19,6 +19,8 @@ public:
 	void DrawTriangle();
 	void DrawFS();
 	void DrawDummy();
+	void DrawDummy_FBO();
+	void DrawAll_FBO();
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
@@ -29,6 +31,12 @@ private:
 	void GetGLPosition(float x, float y, float *newX, float *newY);
 	void GenParticles(int count);
 	void GenDummyMesh(int rX, int rY);
+	void DrawTexture(GLuint texID, 
+		float x, float y, float scale,
+		bool vFlip);
+
+	void GenFBOs();
+
 	GLuint CreatePngTexture(char* filePath, GLuint samplingMethod);
 
 	bool m_Initialized = false;
@@ -64,6 +72,18 @@ private:
 	GLuint m_VBODummy = 0;
 	GLuint m_VBODummyCount = 0;
 	GLuint m_DummyShader = 0;
+
+	//Texture
+	GLuint m_TextureShader = 0;
+	GLuint m_TextureVBO = 0;
+
+	//FBO
+	GLuint m_FBO = 0;
+	GLuint m_FBO_Texture = 0;
+	GLuint m_FBO1 = 0;
+	GLuint m_FBO_Texture1 = 0;
+	GLuint m_FBO2 = 0;
+	GLuint m_FBO_Texture2 = 0;
 
 };
 
