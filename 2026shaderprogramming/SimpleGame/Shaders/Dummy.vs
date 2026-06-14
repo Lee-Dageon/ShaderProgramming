@@ -46,7 +46,7 @@ void Circles()
 			float t = nVal*lTime; // 0~lTime
 			float d = distance(center, pos);
 
-			float range = t/5.0;
+			float range = t/20.0;
 
 			float fade = 30 * clamp(range - d, 0, 1.0);
 

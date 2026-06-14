@@ -7,14 +7,13 @@ uniform bool u_Flip;
 
 in vec2 a_Tex;
 
-out vec2 v_Tex;
-
 uniform float u_Time;
 
 void main()
 {
 	vec4 newPosition;
-	newPosition = vec4(a_Pos, 1);
+	newPosition = vec4(a_Pos * u_Trans.w + vec3(u_Trans.xy, 0.0), 1.0);
+	//newPosition = vec4(a_Pos, 1);
 
 	gl_Position = newPosition;
 

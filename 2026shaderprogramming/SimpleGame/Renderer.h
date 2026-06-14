@@ -80,10 +80,13 @@ private:
 	//FBO
 	GLuint m_FBO = 0;
 	GLuint m_FBO_Texture = 0;
+	GLuint m_DepthBuffer = 0;
 	GLuint m_FBO1 = 0;
 	GLuint m_FBO_Texture1 = 0;
+	GLuint m_DepthBuffer1 = 0;
 	GLuint m_FBO2 = 0;
 	GLuint m_FBO_Texture2 = 0;
+	GLuint m_DepthBuffer2 = 0;
 
 };
 

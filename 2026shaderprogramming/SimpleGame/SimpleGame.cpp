@@ -27,7 +27,7 @@ void RenderScene(void)
 	//g_Renderer->DrawTriangle();
 	//g_Renderer->DrawFS();
 	//g_Renderer->DrawDummy();
-	//g_Renderer->DrawDummy_FBO();
+	g_Renderer->DrawAll_FBO();
 	// 연속적 화면 출력
 	glutSwapBuffers();
 }
