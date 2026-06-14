@@ -28,17 +28,28 @@ void Flag()
 
 void Circles()
 {
-	vec2 points[2];
-	points[0] = vec2(0.0, 0.0);
-	points[1] = vec2(0.2, 0.2);
+	vec4 points[2];
+	points[0] = vec4(0.0, 0.0, 1.0, 0.2); //x,y,w(lifeTime),z(startTime)
+	points[1] = vec4(0.2, 0.2, 0.5, 0.0);
 	
 	float accum = 0;
 	for(int i = 0; i< 2; i++)
 	{
-		vec2 center = points[i];
+		vec2 center = points[i].xy;
 		vec2 pos = a_Pos.xy;
-		float d = distance(center, pos);
-		accum += sin(d*4*c_PI*8 + u_Time * 2);
+		float lTime = points[i].z;
+		float sTime = points[i].w;
+		float nTime = u_Time - sTime;
+
+		if(nTime >0)
+		{
+			float nVal = fract(nTime/lTime);
+			float t = nVal*lTime;
+			float d = distance(center, pos);
+
+			float sinValue = sin(d*4*c_PI*8 + t * 2);
+			accum += sinValue;
+		}
 	}
 
 	v_Grey = accum;
