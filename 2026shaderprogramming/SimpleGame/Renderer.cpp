@@ -801,7 +801,7 @@ void Renderer::DrawFS()
 
 	int uPoints = glGetUniformLocation(
 		shader, "u_DropInfo");
-	glUniform4fv(uPoints, 1000, m_DropPoints);
+	glUniform4fv(uPoints, 250, m_DropPoints);
 
 	int uRGBTexture = glGetUniformLocation(shader,
 		"u_RGBTex");
@@ -945,7 +945,7 @@ void Renderer::DrawDummy()
 
 	int uPoints = glGetUniformLocation(
 		shader, "u_DropInfo");
-	glUniform4fv(uPoints, 1000, m_DropPoints);
+	glUniform4fv(uPoints, 256, m_DropPoints);
 
 
 	// u_JangTex 텍스처                                                       

@@ -1,6 +1,6 @@
 #version 330
 
-// Ãâ·ÂÇÏ´Â °ÍÀ» 0¹ø ÇÁ·¹ÀÓ¹öÆÛ¿¡ ±×¸°´Ù
+// ì¶œë ¥í•˜ëŠ” ê²ƒì„ 0ë²ˆ í”„ë ˆì„ë²„í¼ì— ê·¸ë¦°ë‹¤
 layout(location=0) out vec4 FragColor;
 layout(location=1) out vec4 FragColor1;
 
@@ -14,7 +14,7 @@ uniform sampler2D u_CurrNumTex;
 uniform sampler2D u_NumsTex;
 uniform int u_InputNum;
 
-uniform vec4 u_DropInfo[1000]; //vec4(x, y, sT, lT)
+uniform vec4 u_DropInfo[250]; //vec4(x, y, sT, lT)
 
 void Simple()
 {
@@ -78,13 +78,13 @@ void CircleSin()
 
 void FractalJuliaAnimated()
 {
-    // UV(0~1)¸¦ º¹¼ÒÆò¸é ÁÂÇ¥(-1~1 ±ÙÃ³)·Î º¯È¯
+    // UV(0~1)ë¥¼ ë³µì†Œí‰ë©´ ì¢Œí‘œ(-1~1 ê·¼ì²˜)ë¡œ ë³€í™˜
     vec2 uv = v_Tex * 2.0 - 1.0;
 
-    // È­¸éºñ º¸Á¤ÀÌ ÇÊ¿äÇÏ¸é x¸¦ ´õ ³ĞÈ÷°Å³ª ÁÙÀÏ ¼ö ÀÖÀ½
+    // í™”ë©´ë¹„ ë³´ì •ì´ í•„ìš”í•˜ë©´ xë¥¼ ë” ë„“íˆê±°ë‚˜ ì¤„ì¼ ìˆ˜ ìˆìŒ
     uv.x *= 1.6;
 
-    // ½Ã°£¿¡ µû¶ó º¯È­ÇÏ´Â Julia »ó¼ö
+    // ì‹œê°„ì— ë”°ë¼ ë³€í™”í•˜ëŠ” Julia ìƒìˆ˜
     vec2 c = vec2(
         0.35 * cos(u_Time * 0.7),
         0.35 * sin(u_Time * 1.1)
@@ -106,15 +106,15 @@ void FractalJuliaAnimated()
             break;
     }
 
-    // ¹İº¹ È½¼ö ±â¹İ ¹à±â
+    // ë°˜ë³µ íšŸìˆ˜ ê¸°ë°˜ ë°ê¸°
     float t = float(i) / float(maxIter);
 
-    // Á» ´õ È­·ÁÇÏ°Ô º¸ÀÌµµ·Ï ºñ¼±Çü ¸ÅÇÎ
+    // ì¢€ ë” í™”ë ¤í•˜ê²Œ ë³´ì´ë„ë¡ ë¹„ì„ í˜• ë§¤í•‘
     float r = 0.5 + 0.5 * cos(6.2831 * (t + u_Time * 0.08));
     float g = pow(t, 0.7);
     float b = 0.5 + 0.5 * sin(6.2831 * (t * 0.8 + u_Time * 0.12));
 
-    // ³»ºÎ´Â ¾îµÓ°Ô, ¿ÜºÎ´Â ÄÃ·¯°¡ µ¹µµ·Ï
+    // ë‚´ë¶€ëŠ” ì–´ë‘¡ê²Œ, ì™¸ë¶€ëŠ” ì»¬ëŸ¬ê°€ ëŒë„ë¡
     if (i == maxIter)
     {
         FragColor = vec4(0.02, 0.02, 0.03, 1.0);
@@ -160,7 +160,7 @@ vec4 RainDrop()
 	return vec4(accum);
 }
 
-void Flag()
+vec4 Flag()
 {
     float amp = 0.5;
     float speed = 15;
@@ -178,10 +178,10 @@ void Flag()
     else
     {
         grey = 0;
-        discard;
+//		discard;
     }
 
-    FragColor = vec4(grey);
+    return vec4(grey);
 }
 
 void Flame()
@@ -310,7 +310,8 @@ void main()
 {
 	//TextureSampling();
     FragColor = RainDrop();
-    Flag();
+    FragColor1 = Flag();
+   //Flag();
 }
 
 
