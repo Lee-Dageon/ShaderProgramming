@@ -299,8 +299,8 @@ void Renderer::GenFBOs()
 
 	glGenFramebuffers(1, &m_MRT_HDR_FBO);
 	glBindFramebuffer(GL_FRAMEBUFFER, m_MRT_HDR_FBO);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_MRT_HDR_FBO_High_Texture, 0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, m_MRT_HDR_FBO_Low_Texture, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_MRT_HDR_FBO_Low_Texture, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, m_MRT_HDR_FBO_High_Texture, 0);
 
 	// Check
 	status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
@@ -1082,6 +1082,7 @@ void Renderer::DrawTriangle_Bloom()
 	DrawTexture(m_PingpongTexture[1], 0.5f, -0.5f, 0.5f, false);
 
 }
+
 void Renderer::DrawDummy_FBO()
 {
 	// Bind Framebuffer
