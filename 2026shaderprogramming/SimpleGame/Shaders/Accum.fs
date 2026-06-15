@@ -11,8 +11,8 @@ void main()
 {
 	float gamma = 2.2;
 	vec3 color = texture(u_Tex, v_Tex).rgb;
-	vec3 blurred = texture(u_TexBlurred, v_Tex).rgb;
+	vec3 blurred = texture(u_TexBlurred, vec2(v_Tex.x, 1 - v_Tex.y)).rgb;
 
 	vec3 summed = color + blurred;
-	FragColor = texture(summed, 1);
+	FragColor = vec4(summed, 1);
 }
