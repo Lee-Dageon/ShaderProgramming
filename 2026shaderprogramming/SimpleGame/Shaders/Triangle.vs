@@ -134,6 +134,7 @@ void Falling()
         float lifeScale = 2.0;
         float lifeTime = 0.5 + a_RV2 * lifeScale;
 		float t = lifeTime*fract(newTime/lifeTime); //0~lifeTime구간 반복
+		t = t * 0.3;
 		float tt = t*t;
 		float vx, vy;
 		float sx, sy;
