@@ -1063,15 +1063,23 @@ void Renderer::DrawTriangle_Bloom()
 
 	DrawTriangle();
 
+	DrawGaussianBlur(m_MRT_HDR_FBO_High_Texture, m_PingpongFBO[0], m_BlurHShader);
+	for(int i=0; i<20; i++)
+	{
+		DrawGaussianBlur(m_PingpongTexture[0], m_PingpongFBO[1], m_BlurVShader);
+		DrawGaussianBlur(m_PingpongTexture[1], m_PingpongFBO[0], m_BlurHShader);
+	}
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glViewport(0, 0, 1024, 1024);
 
 	GLenum ResetDrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
 	glDrawBuffers(1, ResetDrawBuffers);
 
-	DrawTexture(m_MRT_HDR_FBO_Low_Texture, -0.5f, 0.0f, 0.5f, false);
-	DrawTexture(m_MRT_HDR_FBO_High_Texture, 0.5f, 0.0f, 0.5f, false);
-
+	DrawTexture(m_MRT_HDR_FBO_Low_Texture, -0.5f, 0.5f, 0.5f, false);
+	DrawTexture(m_MRT_HDR_FBO_High_Texture, 0.5f, 0.5f, 0.5f, false);
+	DrawTexture(m_PingpongTexture[0], -0.5f, -0.5f, 0.5f, false);
+	DrawTexture(m_PingpongTexture[1], 0.5f, -0.5f, 0.5f, false);
 
 }
 void Renderer::DrawDummy_FBO()
@@ -1095,13 +1103,13 @@ void Renderer::DrawGaussianBlur(GLuint texID, GLuint targetFBOID, GLuint shader)
 
 	GLuint posLoc = glGetAttribLocation(shader, "a_Position");
 	glEnableVertexAttribArray(posLoc);
-	GLuint texLoc = glGetAttribLocation(shader, "a_TexPos");
+	GLuint texLoc = glGetAttribLocation(shader, "a_Tex");
 	glEnableVertexAttribArray(texLoc);
-	glUniform1i(glGetUniformLocation(shader, "u_Texture"), 0);
+	glUniform1i(glGetUniformLocation(shader, "u_Tex"), 0);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texID);
 
-	glBindBuffer(GL_ARRAY_BUFFER, m_FullRectVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOFS);
 	glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, 0);
 	glVertexAttribPointer(texLoc, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (GLvoid*)(sizeof(float) * 3));
 	glDrawArrays(GL_TRIANGLES, 0, 6);

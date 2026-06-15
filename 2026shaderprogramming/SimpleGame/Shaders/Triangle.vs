@@ -131,7 +131,7 @@ void Falling()
 
 	if(newTime > 0)
 	{
-        float timeScale = 0.1;
+        float timeScale = 0.5;
         newTime *= timeScale;
         float lifeScale = 2.0;
         float lifeTime = 0.5 + a_RV2 * lifeScale;
