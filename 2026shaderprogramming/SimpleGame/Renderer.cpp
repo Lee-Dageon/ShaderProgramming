@@ -1067,7 +1067,7 @@ void Renderer::DrawTriangle_Bloom()
 	DrawTriangle();
 
 	DrawGaussianBlur(m_MRT_HDR_FBO_High_Texture, m_PingpongFBO[0], m_BlurHShader);
-	for(int i=0; i<20; i++)
+	for(int i=0; i<50; i++)
 	{
 		DrawGaussianBlur(m_PingpongTexture[0], m_PingpongFBO[1], m_BlurVShader);
 		DrawGaussianBlur(m_PingpongTexture[1], m_PingpongFBO[0], m_BlurHShader);
@@ -1137,6 +1137,9 @@ void Renderer::DrawAccumResult(GLuint texOri, GLint texBlurred, bool bFlip)
 
 	int uTexBlurred = glGetUniformLocation(shader, "u_TexBlurred");
 	glUniform1i(uTexBlurred, 1);
+
+	int uExposure = glGetUniformLocation(shader, "u_Exposure");
+	glUniform1f(uExposure, 2);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texOri);
