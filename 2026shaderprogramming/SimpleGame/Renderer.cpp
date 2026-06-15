@@ -876,17 +876,23 @@ void Renderer::DrawAll_FBO()
 	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
 	glViewport(0, 0, 512, 512);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClearDepth(1.f);
 	DrawTriangle();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO1);
 	glViewport(0, 0, 512, 512);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClearDepth(1.f);
 	// Draw
 	DrawFS();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO2);
 	glViewport(0, 0, 512, 512);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClearDepth(1.f);
 	DrawDummy();
 
 	// Main Framebuffer
@@ -896,6 +902,11 @@ void Renderer::DrawAll_FBO()
 	DrawTexture(m_FBO_Texture, -0.6f, 0.0f, 0.5f, false);
 	DrawTexture(m_FBO_Texture1, 0.0f, 0.0f, 0.5f, false);
 	DrawTexture(m_FBO_Texture2, 0.6f, 0.0f, 0.5f, false);
+}
+
+void Renderer::DrawMultipleRenderTarget()
+{
+
 }
 
 void Renderer::DrawDummy_FBO()

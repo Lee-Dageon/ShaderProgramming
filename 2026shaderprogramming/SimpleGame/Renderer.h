@@ -21,6 +21,7 @@ public:
 	void DrawDummy();
 	void DrawDummy_FBO();
 	void DrawAll_FBO();
+	void DrawMultipleRenderTarget();
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);

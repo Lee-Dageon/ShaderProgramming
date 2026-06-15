@@ -2,6 +2,7 @@
 
 // 출력하는 것을 0번 프레임버퍼에 그린다
 layout(location=0) out vec4 FragColor;
+layout(location=1) out vec4 FragColor1;
 
 in vec2 v_Tex;
 
@@ -130,7 +131,7 @@ void FractalJuliaAnimated()
     }
 }
 
-void RainDrop()
+vec4 RainDrop()
 {	
 	float accum = 0;
 	//Rain Drop
@@ -156,7 +157,7 @@ void RainDrop()
 		{
 		}
 	}
-	FragColor = vec4(accum);
+	return vec4(accum);
 }
 
 void Flag()
@@ -308,9 +309,9 @@ void Nums()
 void main()
 {
 	//TextureSampling();
-    Nums();
+    FragColor = RainDrop();
+    Flag();
 }
-
 
 
 /*void FS_01_Q6()
