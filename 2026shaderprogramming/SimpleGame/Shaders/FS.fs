@@ -133,13 +133,14 @@ void FractalJuliaAnimated()
 
 vec4 RainDrop()
 {	
+	float dropTime = u_Time * 0.25;
 	float accum = 0;
 	//Rain Drop
 	for(int i=0; i<200; i++)
 	{
 		float lTime = u_DropInfo[i].w;
 		float sTime = u_DropInfo[i].z;
-		float newTime = u_Time - sTime;
+		float newTime = dropTime - sTime;
 		if(newTime > 0)
 		{
 			newTime = fract(newTime/lTime); //0~1

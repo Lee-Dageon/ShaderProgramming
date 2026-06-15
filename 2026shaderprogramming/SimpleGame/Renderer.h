@@ -89,5 +89,9 @@ private:
 	GLuint m_FBO_Texture2 = 0;
 	GLuint m_DepthBuffer2 = 0;
 
+	GLuint m_MRT_FBO = 0;
+	GLuint m_MRT_FBO_Texture0 = 0;
+	GLuint m_MRT_FBO_Texture1 = 0;
+	GLuint m_MRT_FBO_Texture2 = 0;
 };
 

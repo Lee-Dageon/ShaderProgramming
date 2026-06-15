@@ -121,7 +121,8 @@ void Renderer::GenFBOs()
 	// Gen FBO, attach(tex, dep render b)
 	glGenFramebuffers(1, &m_FBO);
 	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, 
+	glFramebufferTexture2D(GL_FRAMEBUFFER, 
+		GL_COLOR_ATTACHMENT0, 
 		GL_TEXTURE_2D, m_FBO_Texture, 0);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, 
 		GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,
@@ -210,6 +211,61 @@ void Renderer::GenFBOs()
 
 	// 원상 복구
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	// Gen Texture 1
+	glGenTextures(1, &m_MRT_FBO_Texture0);
+	glBindTexture(GL_TEXTURE_2D, m_MRT_FBO_Texture0);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 512, 512, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+
+	// Gen Texture 2
+	glGenTextures(1, &m_MRT_FBO_Texture1);
+	glBindTexture(GL_TEXTURE_2D, m_MRT_FBO_Texture1);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 512, 512, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+
+	// Gen Texture 3
+	glGenTextures(1, &m_MRT_FBO_Texture2);
+	glBindTexture(GL_TEXTURE_2D, m_MRT_FBO_Texture2);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 512, 512, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+
+	// Gen Depth(Render Buffer)
+	GLuint MRTdepthBuffer;
+	glGenRenderbuffers(1, &MRTdepthBuffer);
+	glBindRenderbuffer(GL_RENDERBUFFER, MRTdepthBuffer);
+	glRenderbufferStorage(GL_RENDERBUFFER,
+		GL_DEPTH_COMPONENT, 512, 512);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+	// Gen FBO, attach(tex, dep render b)
+	glGenFramebuffers(1, &m_MRT_FBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, m_MRT_FBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER,
+		GL_COLOR_ATTACHMENT0,
+		GL_TEXTURE_2D, m_MRT_FBO_Texture0, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER,
+		GL_COLOR_ATTACHMENT1,
+		GL_TEXTURE_2D, m_MRT_FBO_Texture1, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER,
+		GL_COLOR_ATTACHMENT2,
+		GL_TEXTURE_2D, m_MRT_FBO_Texture2, 0);
+
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER,
+		GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,
+		MRTdepthBuffer);
 }
 
 void Renderer::CreateVertexBufferObjects()
@@ -897,7 +953,7 @@ void Renderer::DrawAll_FBO()
 
 	// Main Framebuffer
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);	
-	glViewport(0, 0, m_WindowSizeX, m_WindowSizeY);
+	glViewport(0, 0, 1024, 1024);
 	// Draw Texture
 	DrawTexture(m_FBO_Texture, -0.6f, 0.0f, 0.5f, false);
 	DrawTexture(m_FBO_Texture1, 0.0f, 0.0f, 0.5f, false);
@@ -906,6 +962,24 @@ void Renderer::DrawAll_FBO()
 
 void Renderer::DrawMultipleRenderTarget()
 {
+	glBindFramebuffer(GL_FRAMEBUFFER, m_MRT_FBO);
+	GLenum DrawBuffers[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+	glDrawBuffers(2, DrawBuffers);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClearDepth(1.f);
+	DrawFS();
+
+	// Main Framebuffer
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glViewport(0, 0, 1024, 1024);
+
+	GLenum ResetDrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
+	glDrawBuffers(1, ResetDrawBuffers);
+
+	DrawTexture(m_MRT_FBO_Texture0, -0.5f, 0.0f, 0.3f, false);
+	DrawTexture(m_MRT_FBO_Texture1, 0.0f, 0.0f, 0.3f, false);
+	DrawTexture(m_MRT_FBO_Texture1, 0.5f, 0.0f, 0.3f, false);
 
 }
 
