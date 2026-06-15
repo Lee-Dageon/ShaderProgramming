@@ -78,7 +78,12 @@ void AnimTexture()
 }
 
 
-void ex1()
+void COLOR()
+{
+	FragColor = vec4(v_Color, 1);
+}
+
+void COLOR1()
 {
 	FragColor = vec4(v_Color, 1);
 }
@@ -89,5 +94,5 @@ void main()
 	//CircleShape();
 	//CircleShapeHDR();
 
-	ex1();
+	COLOR();
 }

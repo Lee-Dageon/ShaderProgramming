@@ -200,8 +200,20 @@ void ex1()
 	gl_Position = pos;
 }
 
+void ex2()
+{
+	vec4 pos = vec4(0, 0, 0, 1);
+	float trans = ceil(a_RV1 * 5.0)/5.0;
+	pos.x = a_Pos.x + (a_RV * 2.0 - 1.0);
+	pos.y = a_Pos.y + trans + 0.2 * sin(a_RV * 2 * c_PI);
+	v_Color = vec3(0); 
+	gl_Position = pos;
+}
+
+
+
 void main()
 {
     //Falling();
-	ex1();
+	ex2();
 }
