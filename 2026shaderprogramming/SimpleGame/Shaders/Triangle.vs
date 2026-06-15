@@ -193,8 +193,9 @@ void Shape()
 void ex1()
 {
 	vec4 pos = vec4(0, 0, 0, 1);
-	pos.x = a_Pos.x + sin(a_RV * 2 * c_PI);
-	pos.y = a_Pos.y + cos(a_RV * 2 * c_PI);
+	float radius = ceil(a_RV1 * 5.0)/5.0;
+	pos.x = a_Pos.x + radius * sin(a_RV * 2 * c_PI);
+	pos.y = a_Pos.y + radius * cos(a_RV * 2 * c_PI);
 	v_Color = vec3(0);
 	gl_Position = pos;
 }
