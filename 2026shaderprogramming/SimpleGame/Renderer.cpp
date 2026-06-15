@@ -1021,6 +1021,29 @@ void Renderer::DrawMultipleRenderTarget()
 
 }
 
+void Renderer::DrawTriangle_Bloom()
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, m_MRT_HDR_FBO);
+	GLenum DrawBuffers[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+	glDrawBuffers(2, DrawBuffers);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClearDepth(1.f);
+	glViewport(0, 0, 1024, 1024);
+
+	DrawTriangle();
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glViewport(0, 0, 1024, 1024);
+
+	GLenum ResetDrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
+	glDrawBuffers(1, ResetDrawBuffers);
+
+	DrawTexture(m_MRT_HDR_FBO_High_Texture, -0.5f, 0.0f, 0.5f, false);
+	DrawTexture(m_MRT_HDR_FBO_Low_Texture, 0.5f, 0.0f, 0.5f, false);
+
+
+}
 void Renderer::DrawDummy_FBO()
 {
 	// Bind Framebuffer
