@@ -1078,7 +1078,7 @@ void Renderer::DrawTriangle_Bloom()
 
 	DrawTexture(m_MRT_HDR_FBO_Low_Texture, -0.5f, 0.5f, 0.5f, false);
 	DrawTexture(m_MRT_HDR_FBO_High_Texture, 0.5f, 0.5f, 0.5f, false);
-	DrawTexture(m_PingpongTexture[0], -0.5f, -0.5f, 0.5f, false);
+	DrawTexture(m_PingpongTexture[0], -0.5f, -0.5f, 0.5f, true);
 	DrawTexture(m_PingpongTexture[1], 0.5f, -0.5f, 0.5f, false);
 
 }
@@ -1099,13 +1099,15 @@ void Renderer::DrawDummy_FBO()
 void Renderer::DrawGaussianBlur(GLuint texID, GLuint targetFBOID, GLuint shader)
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, targetFBOID);
+	glViewport(0, 0, 1024, 1024);
+	glClear(GL_COLOR_BUFFER_BIT);
 	glUseProgram(shader);
 
 	GLuint posLoc = glGetAttribLocation(shader, "a_Position");
 	glEnableVertexAttribArray(posLoc);
 	GLuint texLoc = glGetAttribLocation(shader, "a_Tex");
 	glEnableVertexAttribArray(texLoc);
-	glUniform1i(glGetUniformLocation(shader, "u_Tex"), 0);
+	glUniform1i(glGetUniformLocation(shader, "u_Texture"), 0);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texID);
 
