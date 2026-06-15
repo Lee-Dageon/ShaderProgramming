@@ -50,6 +50,12 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_TextureShader = CompileShaders(
 		"./Shaders/Texture.vs",
 		"./Shaders/Texture.fs");
+	m_BlurHShader = CompileShaders(
+		"./Shaders/BlurH.vs",
+		"./Shaders/BlurH.fs");
+	m_BlurVShader = CompileShaders(
+		"./Shaders/BlurV.vs",
+		"./Shaders/BlurV.fs");
 
 	//Load Textures
 	m_RgbTexture = CreatePngTexture("./textures/rgb.png", GL_NEAREST); //0 slot
@@ -301,6 +307,30 @@ void Renderer::GenFBOs()
 	if (status != GL_FRAMEBUFFER_COMPLETE)
 	{
 		assert(0);
+	}
+
+	glGenFramebuffers(2, m_PingpongFBO);
+	glGenTextures(2, m_PingpongTexture);
+
+	for (int i = 0; i < 2; i++)
+	{
+		glBindTexture(GL_TEXTURE_2D, m_PingpongTexture[i]);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 1024, 1024, 0, GL_RGBA, GL_FLOAT, 0);
+		
+		// Attach
+		glBindFramebuffer(GL_FRAMEBUFFER, m_PingpongFBO[i]);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_PingpongTexture[i], 0);
+		
+		status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+		if (status != GL_FRAMEBUFFER_COMPLETE)
+		{
+			assert(0);
+		}
+		
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -1039,8 +1069,8 @@ void Renderer::DrawTriangle_Bloom()
 	GLenum ResetDrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
 	glDrawBuffers(1, ResetDrawBuffers);
 
-	DrawTexture(m_MRT_HDR_FBO_High_Texture, -0.5f, 0.0f, 0.5f, false);
-	DrawTexture(m_MRT_HDR_FBO_Low_Texture, 0.5f, 0.0f, 0.5f, false);
+	DrawTexture(m_MRT_HDR_FBO_Low_Texture, -0.5f, 0.0f, 0.5f, false);
+	DrawTexture(m_MRT_HDR_FBO_High_Texture, 0.5f, 0.0f, 0.5f, false);
 
 
 }
@@ -1056,6 +1086,26 @@ void Renderer::DrawDummy_FBO()
 	glViewport(0, 0, 1024, 1024);
 	// Draw Texture
 	DrawTexture(m_FBO_Texture, 0, 0, 0.5, false);
+}
+
+void Renderer::DrawGaussianBlur(GLuint texID, GLuint targetFBOID, GLuint shader)
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, targetFBOID);
+	glUseProgram(shader);
+
+	GLuint posLoc = glGetAttribLocation(shader, "a_Position");
+	glEnableVertexAttribArray(posLoc);
+	GLuint texLoc = glGetAttribLocation(shader, "a_TexPos");
+	glEnableVertexAttribArray(texLoc);
+	glUniform1i(glGetUniformLocation(shader, "u_Texture"), 0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texID);
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_FullRectVBO);
+	glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, 0);
+	glVertexAttribPointer(texLoc, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (GLvoid*)(sizeof(float) * 3));
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void Renderer::DrawDummy()

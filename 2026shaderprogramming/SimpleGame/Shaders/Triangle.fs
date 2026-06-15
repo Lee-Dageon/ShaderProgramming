@@ -30,7 +30,7 @@ void CircleShapeHDR()
 	float d = distance(vec2(0.5, 0.5), v_Tex);
 	if(d<0.5)
 	{
-		newColor = vec4(v_Color, clamp(0.5 - d, 0, 0.5)*5.0);
+		newColor = vec4(v_Color*1.5, clamp(0.5 - d, 0, 0.5)*2.0);
 	}
 	else
 	{
@@ -40,6 +40,7 @@ void CircleShapeHDR()
 	float brightness = dot(newColor.rgb, vec3(0.2126, 0.7152, 0.0722));
 	
 	FragColor = newColor;
+
 	if(brightness > 1.0)
 	{
 		FragColor1 = newColor;
