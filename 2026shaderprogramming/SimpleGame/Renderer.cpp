@@ -56,6 +56,9 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_BlurVShader = CompileShaders(
 		"./Shaders/BlurV.vs",
 		"./Shaders/BlurV.fs");
+	m_AccumShader = CompileShaders(
+		"./Shaders/Accum.vs",
+		"./Shaders/Accum.fs");
 
 	//Load Textures
 	m_RgbTexture = CreatePngTexture("./textures/rgb.png", GL_NEAREST); //0 slot
@@ -1076,10 +1079,12 @@ void Renderer::DrawTriangle_Bloom()
 	GLenum ResetDrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
 	glDrawBuffers(1, ResetDrawBuffers);
 
-	DrawTexture(m_MRT_HDR_FBO_Low_Texture, -0.5f, 0.5f, 0.5f, false);
-	DrawTexture(m_MRT_HDR_FBO_High_Texture, 0.5f, 0.5f, 0.5f, false);
-	DrawTexture(m_PingpongTexture[0], -0.5f, -0.5f, 0.5f, true);
-	DrawTexture(m_PingpongTexture[1], 0.5f, -0.5f, 0.5f, false);
+	DrawAccumResult(m_MRT_HDR_FBO_Low_Texture, m_PingpongTexture[0], false);
+
+	DrawTexture(m_MRT_HDR_FBO_Low_Texture, -0.5f, -0.8f, 0.2f, false);
+	//DrawTexture(m_MRT_HDR_FBO_High_Texture, 0.5f, 0.5f, 0.5f, false);
+	DrawTexture(m_PingpongTexture[0], 0.5f, -0.8f, 0.2f, true);
+	//DrawTexture(m_PingpongTexture[1], 0.5f, -0.5f, 0.5f, false);
 
 }
 
@@ -1117,6 +1122,39 @@ void Renderer::DrawGaussianBlur(GLuint texID, GLuint targetFBOID, GLuint shader)
 	glVertexAttribPointer(texLoc, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (GLvoid*)(sizeof(float) * 3));
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void Renderer::DrawAccumResult(GLuint texOri, GLint texBlurred, bool bFlip)
+{
+	int shader = m_AccumShader;
+	glUseProgram(shader);
+
+	int uFlip = glGetUniformLocation(shader, "u_Flip");
+	glUniform1i(uFlip, bFlip);
+
+	int uTex = glGetUniformLocation(shader, "u_Tex");
+	glUniform1i(uTex, 0);
+
+	int uTexBlurred = glGetUniformLocation(shader, "u_TexBlurred");
+	glUniform1i(uTexBlurred, 1);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texOri);
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, texBlurred);
+
+	int aPos = glGetAttribLocation(shader, "a_Pos");
+	glEnableVertexAttribArray(aPos);
+	glBindBuffer(GL_ARRAY_BUFFER, m_TextureVBO);
+	glVertexAttribPointer(aPos,
+		3,
+		GL_FLOAT,
+		GL_FALSE,
+		sizeof(float) * 3,
+		0);
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
 void Renderer::DrawDummy()

@@ -41,7 +41,8 @@ private:
 
 	GLuint CreatePngTexture(char* filePath, GLuint samplingMethod);
 	void DrawGaussianBlur(GLuint texID, GLuint targetFBOID, GLuint shader);
-	
+	void DrawAccumResult(GLuint texOri, GLint texBlurred, bool bFlip);
+
 	bool m_Initialized = false;
 	
 	unsigned int m_WindowSizeX = 0;
@@ -104,5 +105,8 @@ private:
 	GLuint m_PingpongTexture[2];
 	GLuint m_BlurHShader = 0;
 	GLuint m_BlurVShader = 0;
+
+	//Accum
+	GLuint m_AccumShader = 0;
 };
 
