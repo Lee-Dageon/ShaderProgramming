@@ -182,6 +182,8 @@
     <None Include="Shaders\Dummy.vs" />
     <None Include="Shaders\FS.fs" />
     <None Include="Shaders\FS.vs" />
+    <None Include="Shaders\FullScreenColor.fs" />
+    <None Include="Shaders\FullScreenColor.vs" />
     <None Include="Shaders\SolidRect.fs" />
     <None Include="Shaders\SolidRect.vs" />
     <None Include="Shaders\Texture.fs" />
