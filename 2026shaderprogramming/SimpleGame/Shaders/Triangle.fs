@@ -77,10 +77,12 @@ void AnimTexture()
 	FragColor.a *= value;
 }
 
+
 void ex1()
 {
-	gl_Position = vec4(a_Pos, 1.0);
+	FragColor = vec4(v_Color, 1);
 }
+
 
 void main()
 {

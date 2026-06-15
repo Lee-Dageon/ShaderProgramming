@@ -190,7 +190,17 @@ void Shape()
 	v_Tex = a_Tex;
 }
 
+void ex1()
+{
+	vec4 pos = vec4(0, 0, 0, 1);
+	pos.x = a_Pos.x + sin(a_RV * 2 * c_PI);
+	pos.y = a_Pos.y + cos(a_RV * 2 * c_PI);
+	v_Color = vec3(0);
+	gl_Position = pos;
+}
+
 void main()
 {
-    Falling();
+    //Falling();
+	ex1();
 }
