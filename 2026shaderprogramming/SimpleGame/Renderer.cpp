@@ -266,6 +266,8 @@ void Renderer::GenFBOs()
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER,
 		GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,
 		MRTdepthBuffer);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void Renderer::CreateVertexBufferObjects()
@@ -753,6 +755,7 @@ float g_time = 0;
 
 void Renderer::DrawTriangle()
 {
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	g_time += 0.016;
@@ -963,8 +966,8 @@ void Renderer::DrawAll_FBO()
 void Renderer::DrawMultipleRenderTarget()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, m_MRT_FBO);
-	GLenum DrawBuffers[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
-	glDrawBuffers(2, DrawBuffers);
+	GLenum DrawBuffers[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
+	glDrawBuffers(3, DrawBuffers);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClearDepth(1.f);
@@ -979,7 +982,7 @@ void Renderer::DrawMultipleRenderTarget()
 
 	DrawTexture(m_MRT_FBO_Texture0, -0.5f, 0.0f, 0.3f, false);
 	DrawTexture(m_MRT_FBO_Texture1, 0.0f, 0.0f, 0.3f, false);
-	DrawTexture(m_MRT_FBO_Texture1, 0.5f, 0.0f, 0.3f, false);
+	DrawTexture(m_MRT_FBO_Texture2, 0.5f, 0.0f, 0.3f, false);
 
 }
 

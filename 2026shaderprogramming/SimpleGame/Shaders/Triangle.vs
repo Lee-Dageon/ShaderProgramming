@@ -63,13 +63,13 @@ void Sin1()
 
 void Sin2()
 {
-	float t = mod(u_Time, 1.0);  // 0 ~ 1 ±¸°£ ¹İº¹
+	float t = mod(u_Time, 1.0);  // 0 ~ 1 êµ¬ê°„ ë°˜ë³µ
 	vec4 newPosition;
 
-	// È­¸é ¸Ç ¿ŞÂÊ(-1)¿¡¼­ ¿À¸¥ÂÊ ³¡(+1)±îÁö ÀÌµ¿
+	// í™”ë©´ ë§¨ ì™¼ìª½(-1)ì—ì„œ ì˜¤ë¥¸ìª½ ë(+1)ê¹Œì§€ ì´ë™
 	float xOffset = -1.0 + 2.0 * t;
 
-	// t°¡ 0~1ÀÏ ¶§ »çÀÎ 1ÁÖ±â
+	// tê°€ 0~1ì¼ ë•Œ ì‚¬ì¸ 1ì£¼ê¸°
 	float yOffset = 0.5 * sin(t * 2.0 * 3.141592);
 
 	newPosition.x = a_Pos.x + xOffset;
@@ -133,7 +133,7 @@ void Falling()
 	{
         float lifeScale = 2.0;
         float lifeTime = 0.5 + a_RV2 * lifeScale;
-		float t = lifeTime*fract(newTime/lifeTime); //0~lifeTime±¸°£ ¹İº¹
+		float t = lifeTime*fract(newTime/lifeTime); //0~lifeTimeêµ¬ê°„ ë°˜ë³µ
 		float tt = t*t;
 		float vx, vy;
 		float sx, sy;
@@ -156,6 +156,9 @@ void Falling()
 	{
 		gl_Position = vec4(-1000, 0, 0, 1);
 	}
+
+	v_Color = a_RGB;
+	v_Tex = a_Tex;
 }
 
 void Shape()
@@ -187,5 +190,5 @@ void Shape()
 
 void main()
 {
-    Shape();
+    Falling();
 }

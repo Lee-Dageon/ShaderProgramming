@@ -3,6 +3,7 @@
 // 출력하는 것을 0번 프레임버퍼에 그린다
 layout(location=0) out vec4 FragColor;
 layout(location=1) out vec4 FragColor1;
+layout(location=2) out vec4 FragColor2;
 
 in vec2 v_Tex;
 
@@ -28,7 +29,7 @@ void Simple()
 	}
 }
 
-void LinePattern()
+vec4 LinePattern()
 {
 	float lineCountH = 10;
 	float lineCountV = 2;
@@ -45,7 +46,7 @@ void LinePattern()
 			abs(sin((v_Tex.x*2*c_PI+per)*lineCountV))
 					, lineWidth);
 
-	FragColor = vec4(grey+grey1);
+	return vec4(grey+grey1);
 }
 
 void Circle()
@@ -312,6 +313,7 @@ void main()
 	//TextureSampling();
     FragColor = RainDrop();
     FragColor1 = Flag();
+    FragColor2 = LinePattern();
    //Flag();
 }
 

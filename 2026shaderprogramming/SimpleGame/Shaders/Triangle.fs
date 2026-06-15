@@ -48,5 +48,5 @@ void AnimTexture()
 
 void main()
 {
-	AnimTexture();
+	CircleShape();
 }
