@@ -210,10 +210,26 @@ void ex2()
 	gl_Position = pos;
 }
 
+void ex3()
+{
+	float mul_Time = u_Time * 0.1f;
+	vec4 pos = vec4(0, 0, 0, 1);
+	float t = fract(mul_Time/2.0)*2.0; // 0~2 구간 반복
+	pos.x = a_Pos.x + t - 1.0;
+	pos.y = a_Pos.y;
+	v_Color = vec3(0); 
+	gl_Position = pos;
+}
+
+//원운동
+
+
+
+//사인 운동
 
 
 void main()
 {
     //Falling();
-	ex2();
+	ex3();
 }

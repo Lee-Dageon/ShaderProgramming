@@ -293,5 +293,5 @@ void Q7()
 
 void main()
 {
-	Q7();
+	Q6();
 }
