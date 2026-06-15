@@ -16,7 +16,7 @@ out vec3 v_Color;
 out vec2 v_Tex;
 
 const float c_PI = 3.141592;
-const float c_G = -9.8;
+const float c_G = -2.0;
 
 float random(float x) {
     return fract(sin(x) * 43758.5453123);
@@ -126,20 +126,21 @@ void Bounce()
 
 void Falling()
 {
-	float startTime = a_RV1 * 3;
+	float startTime = a_RV1;
 	float newTime = u_Time - startTime;
 
 	if(newTime > 0)
 	{
+        float timeScale = 0.1;
+        newTime *= timeScale;
         float lifeScale = 2.0;
         float lifeTime = 0.5 + a_RV2 * lifeScale;
 		float t = lifeTime*fract(newTime/lifeTime); //0~lifeTime구간 반복
-		t = t * 0.3;
 		float tt = t*t;
 		float vx, vy;
 		float sx, sy;
-		vx = a_Vel.x/30;
-		vy = a_Vel.y/30;
+		vx = a_Vel.x/60;
+		vy = a_Vel.y/60;
 
 		sx = a_Pos.x * (1-random(a_RV)) + sin(a_RV*2*c_PI);
 		sy = a_Pos.y * (1-random(a_RV)) + cos(a_RV*2*c_PI);
